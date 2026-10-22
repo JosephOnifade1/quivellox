@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* The Evidence Desk - Light Paper Palette */
+    --bg-main: #F5F4EE;
+    --bg-surface: #FFFEFA;
+    --bg-surface-elevated: #ECEBE3;
+    --border-subtle: #DADBD1;
+    --border-strong: #C4C6B7;
+
+    --text-primary: #24271F;
+    --text-muted: #707469;
+    --text-faint: #989C90;
+
+    --accent-citron: #D8F36A;
+    --accent-citron-muted: #B7CE58;
+    --accent-citron-text: #20231A;
+
+    --status-success: #15803D;
+    --status-success-bg: #DCFCE7;
+    --status-warning: #B45309;
+    --status-warning-bg: #FEF3C7;
+    --status-error: #B91C1C;
+    --status-error-bg: #FEE2E2;
+    --status-info: #475569;
+    --status-info-bg: #F1F5F9;
+
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    --panel-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark {
+    /* The Evidence Desk - Dark Ink Palette */
+    --bg-main: #151713;
+    --bg-surface: #20231E;
+    --bg-surface-elevated: #292D26;
+    --border-subtle: #383D34;
+    --border-strong: #4B5244;
+
+    --text-primary: #F4F3EB;
+    --text-muted: #B4B8AC;
+    --text-faint: #7A8072;
+
+    --accent-citron: #D8F36A;
+    --accent-citron-muted: #B7CE58;
+    --accent-citron-text: #20231A;
+
+    --status-success: #4ADE80;
+    --status-success-bg: #052E16;
+    --status-warning: #FBBF24;
+    --status-warning-bg: #451A03;
+    --status-error: #F87171;
+    --status-error-bg: #450A0A;
+    --status-info: #94A3B8;
+    --status-info-bg: #1E293B;
+
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    --panel-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar for The Evidence Desk */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* Citations & Evidence markers */
+.evidence-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.evidence-badge:hover {
+  background-color: var(--accent-citron);
+  border-color: var(--accent-citron-muted);
+  color: var(--accent-citron-text);
+  transform: translateY(-1px);
+}
+
+/* Code and Mono text */
+.font-mono-code {
+  font-family: var(--font-geist-mono), ui-monospace, "IBM Plex Mono", Menlo, monospace;
 }

@@ -224,35 +224,43 @@ export class DifyClient {
       throw new Error('[DifyClient] datasetId is required for retrieval');
     }
 
-    const res = await this.request<DifyRetrieveResponse>(
-      `/datasets/${datasetId}/retrieve`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: query.slice(0, 250), // Dify query string limit
-          external_retrieval_model: {
-            top_k: topK,
-            score_threshold_enabled: false,
+    try {
+      const res = await this.request<DifyRetrieveResponse>(
+        `/datasets/${datasetId}/retrieve`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        }),
+          body: JSON.stringify({
+            query: query.slice(0, 250), // Dify query string limit
+            external_retrieval_model: {
+              top_k: topK,
+              score_threshold_enabled: false,
+            },
+          }),
+        }
+      );
+
+      if (!res.records || !Array.isArray(res.records)) {
+        return [];
       }
-    );
 
-    if (!res.records || !Array.isArray(res.records)) {
-      return [];
+      return res.records.map((rec: any) => ({
+        segmentId: rec.segment?.id || rec.id || `seg-${Date.now()}`,
+        documentId: rec.document?.id || rec.segment?.document_id || '',
+        documentName: rec.document?.name || rec.segment?.document_name || 'Document',
+        content: rec.segment?.content || rec.content || '',
+        score: rec.score ?? 0.85,
+        position: rec.segment?.position || 1,
+      }));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : '';
+      if (msg.includes('Collection not found') || msg.includes('not found') || msg.includes('empty')) {
+        return [];
+      }
+      throw err;
     }
-
-    return res.records.map((rec) => ({
-      segmentId: rec.segment.id,
-      documentId: rec.document.id,
-      documentName: rec.document.name,
-      content: rec.segment.content,
-      score: rec.score,
-      position: rec.segment.position,
-    }));
   }
 
   /**

@@ -102,7 +102,8 @@ export type ActivityEventType =
   | 'document.failed'
   | 'document.deleted'
   | 'conversation.created'
-  | 'query.executed';
+  | 'query.executed'
+  | 'workspace.updated';
 
 export interface ActivityEvent {
   id: string;

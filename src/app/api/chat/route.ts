@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { requireAuthContext } from '@/server/authorization/authorization-service';
 import { getRAGProvider } from '@/server/rag/provider-factory';
+import {
+  createConversationRecord,
+  getConversationWithMessages,
+  saveMessagesToConversation,
+} from '@/server/db/conversations-repository';
+import { recordActivityEvent } from '@/server/db/activity-repository';
 import { getStore } from '@/lib/rag-store';
 import { Message } from '@/types';
 
@@ -23,9 +29,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const question = body.question || body.query;
-    // conversationId may come from the client but is only used as a session
-    // key for in-memory chat history — it does not grant workspace access.
-    const conversationId = typeof body.conversationId === 'string' ? body.conversationId : undefined;
+    let conversationId = typeof body.conversationId === 'string' && body.conversationId.trim().length > 0
+      ? body.conversationId.trim()
+      : undefined;
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return NextResponse.json({ error: 'Valid question parameter is required' }, { status: 400 });
@@ -41,14 +47,73 @@ export async function POST(req: NextRequest) {
       topK: 4,
     });
 
-    // 4. Persist dialogue history in the in-memory store
-    const store = getStore();
-    const convId = conversationId || `conv-${Date.now()}`;
-    let conv = store.conversations.find((c) => c.id === convId);
+    // 4. Persist conversation and messages to Supabase PostgreSQL
+    let realConvId = conversationId;
 
+    if (realConvId) {
+      // Verify conversation exists and belongs to user
+      const existing = await getConversationWithMessages(realConvId, ctx.workspaceId, ctx.userId);
+      if (!existing) {
+        realConvId = undefined; // Create a fresh one if ID was stale or invalid
+      }
+    }
+
+    if (!realConvId) {
+      const title = question.slice(0, 48) + (question.length > 48 ? '…' : '');
+      const newConv = await createConversationRecord({
+        workspaceId: ctx.workspaceId,
+        userId: ctx.userId,
+        title,
+      });
+      realConvId = newConv?.id || `conv-${crypto.randomUUID()}`;
+
+      await recordActivityEvent({
+        workspaceId: ctx.workspaceId,
+        actorId: ctx.userId,
+        eventType: 'conversation.created',
+        resourceType: 'conversation',
+        resourceId: realConvId,
+        metadata: { title },
+      });
+    }
+
+    // Persist user question and assistant answer with citations
+    try {
+      await saveMessagesToConversation(realConvId, [
+        {
+          role: 'user',
+          content: question,
+        },
+        {
+          role: 'assistant',
+          content: result.answer,
+          citations: result.citations,
+        },
+      ]);
+    } catch (saveErr) {
+      console.warn('[ChatRoute] Message persistence warning:', saveErr);
+    }
+
+    // Record query activity event
+    await recordActivityEvent({
+      workspaceId: ctx.workspaceId,
+      actorId: ctx.userId,
+      eventType: 'query.executed',
+      resourceType: 'conversation',
+      resourceId: realConvId,
+      metadata: {
+        question: question.slice(0, 80),
+        citation_count: result.citations.length,
+        insufficient_evidence: result.insufficientEvidence,
+      },
+    });
+
+    // Sync in-memory store for dev / fallback
+    const store = getStore();
+    let conv = store.conversations.find((c) => c.id === realConvId);
     if (!conv) {
       conv = {
-        id: convId,
+        id: realConvId,
         workspace_id: ctx.workspaceId,
         user_id: ctx.userId,
         title: question.slice(0, 48) + (question.length > 48 ? '…' : ''),
@@ -57,7 +122,7 @@ export async function POST(req: NextRequest) {
         updated_at: new Date().toISOString(),
       };
       store.conversations.unshift(conv);
-      store.messages[convId] = [];
+      store.messages[realConvId] = [];
     } else {
       conv.last_message = result.answer.slice(0, 80) + '…';
       conv.updated_at = new Date().toISOString();
@@ -65,28 +130,26 @@ export async function POST(req: NextRequest) {
 
     const userMsg: Message = {
       id: `msg-${Date.now()}-u`,
-      conversation_id: convId,
+      conversation_id: realConvId,
       role: 'user',
       content: question,
       created_at: new Date().toISOString(),
     };
-
     const assistantMsg: Message = {
       id: `msg-${Date.now()}-a`,
-      conversation_id: convId,
+      conversation_id: realConvId,
       role: 'assistant',
       content: result.answer,
       citations: result.citations,
       created_at: new Date().toISOString(),
     };
-
-    if (!store.messages[convId]) store.messages[convId] = [];
-    store.messages[convId].push(userMsg, assistantMsg);
+    if (!store.messages[realConvId]) store.messages[realConvId] = [];
+    store.messages[realConvId].push(userMsg, assistantMsg);
 
     return NextResponse.json({
       answer: result.answer,
       citations: result.citations,
-      conversationId: convId,
+      conversationId: realConvId,
       insufficientEvidence: result.insufficientEvidence,
       provider: result.provider,
       queryTimeMs: result.queryTimeMs,

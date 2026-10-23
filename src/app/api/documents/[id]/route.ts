@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { requireAuthContext, verifyDocumentAccess } from '@/server/authorization/authorization-service';
+import { getDocumentById, getDocumentChunksByDocId } from '@/server/db/documents-repository';
 import { getStore } from '@/lib/rag-store';
 import { deleteDocumentCascade } from '@/server/ingestion/ingestion-service';
 
@@ -15,19 +16,26 @@ export async function GET(
   if (ctxError) return ctxError;
 
   const { id } = await params;
-  const store = getStore();
 
-  const doc = store.documents.find((d) => d.id === id);
+  // 1. Fetch from PostgreSQL
+  let doc = await getDocumentById(id, ctx.workspaceId);
+  let chunks = doc ? await getDocumentChunksByDocId(id, ctx.workspaceId) : [];
+
+  // 2. Fallback to store if not in DB
+  if (!doc) {
+    const store = getStore();
+    doc = store.documents.find((d) => d.id === id) || null;
+    if (doc) {
+      if (doc.workspace_id !== ctx.workspaceId) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
+      chunks = store.chunks.filter((c) => c.document_id === id);
+    }
+  }
+
   if (!doc) {
     return NextResponse.json({ error: 'Document not found' }, { status: 404 });
   }
-
-  // Verify the document belongs to the authenticated user's workspace
-  if (doc.workspace_id !== ctx.workspaceId) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
-  const chunks = store.chunks.filter((c) => c.document_id === id);
 
   return NextResponse.json({ document: doc, chunks });
 }
@@ -45,18 +53,15 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Verify ownership before deleting — document ID alone is not sufficient
+    // Verify ownership before deleting
     const hasAccess = await verifyDocumentAccess(user.id, id);
 
-    // Also check the in-memory store for workspace match (Supabase may not
-    // have the document if it was only added to the local store)
     const store = getStore();
     const doc = store.documents.find((d) => d.id === id);
     if (doc && doc.workspace_id !== ctx.workspaceId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // If Supabase is configured and access check failed, deny
     if (!hasAccess && doc === undefined) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 });
     }

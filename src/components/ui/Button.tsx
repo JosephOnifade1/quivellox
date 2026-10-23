@@ -1,8 +1,8 @@
 import React from 'react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'surface' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'surface' | 'ghost' | 'danger' | 'citron';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   icon?: React.ReactNode;
 }
@@ -23,28 +23,31 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const variantStyles = {
       primary:
-        'bg-[var(--accent-citron)] text-[var(--accent-citron-text)] hover:bg-[var(--accent-citron-muted)] border border-transparent font-semibold shadow-sm',
+        'bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] border border-transparent font-medium shadow-xs',
       secondary:
-        'bg-[var(--bg-surface)] text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] hover:border-[var(--border-strong)]',
+        'bg-[var(--bg-surface)] text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] hover:border-[var(--border-strong)] shadow-xs',
       surface:
-        'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-surface)] border border-[var(--border-subtle)]',
+        'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--border-strong)]',
       ghost:
         'bg-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] border border-transparent',
       danger:
-        'bg-[var(--status-error-bg)] text-[var(--status-error)] hover:opacity-90 border border-[var(--status-error)]/30 font-medium',
+        'bg-[var(--status-error-bg)] text-[var(--status-error)] hover:opacity-90 border border-[var(--status-error-border)] font-medium',
+      citron:
+        'bg-[var(--accent-citron)] text-[var(--accent-citron-text)] hover:bg-[var(--accent-citron-muted)] border border-transparent font-semibold shadow-xs',
     };
 
     const sizeStyles = {
-      sm: 'h-8 px-2.5 text-xs rounded-[6px] gap-1.5',
-      md: 'h-9 px-3.5 text-sm rounded-[8px] gap-2',
-      lg: 'h-11 px-5 text-base rounded-[10px] gap-2.5',
+      xs: 'h-7 px-2 text-xs rounded-[4px] gap-1',
+      sm: 'h-8 px-2.5 text-xs rounded-[5px] gap-1.5',
+      md: 'h-9 px-3.5 text-sm rounded-[6px] gap-2',
+      lg: 'h-10 px-4 text-sm rounded-[7px] gap-2.5',
     };
 
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-citron)] disabled:opacity-50 disabled:cursor-not-allowed select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--bg-main)] disabled:opacity-50 disabled:cursor-not-allowed select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
         {...props}
       >
         {isLoading ? (

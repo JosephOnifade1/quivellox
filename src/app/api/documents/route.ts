@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { requireAuthContext } from '@/server/authorization/authorization-service';
 import { ingestDocument, deleteDocumentCascade } from '@/server/ingestion/ingestion-service';
+import { listDocumentsByWorkspace } from '@/server/db/documents-repository';
 import { getStore } from '@/lib/rag-store';
 
 export async function GET(req: NextRequest) {
@@ -13,26 +14,38 @@ export async function GET(req: NextRequest) {
   const { ctx, errorResponse: ctxError } = await requireAuthContext(user.id);
   if (ctxError) return ctxError;
 
-  const store = getStore();
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('q')?.toLowerCase() || '';
 
-  // Only return documents belonging to the authenticated user's workspace
-  let docs = store.documents.filter((d) => d.workspace_id === ctx.workspaceId);
-  if (search) {
-    docs = docs.filter(
-      (d) =>
-        d.original_filename.toLowerCase().includes(search) ||
-        (d.document_index && d.document_index.toLowerCase().includes(search))
-    );
+  // 1. Fetch real documents from Supabase PostgreSQL
+  let docs = await listDocumentsByWorkspace(ctx.workspaceId, search);
+
+  // 2. If no DB documents exist, check in-memory store (e.g. for mock test suites or initial library)
+  if (docs.length === 0) {
+    const store = getStore();
+    let storeDocs = store.documents.filter((d) => d.workspace_id === ctx.workspaceId);
+    if (storeDocs.length === 0) {
+      storeDocs = store.documents.filter((d) => d.workspace_id === 'ws-demo');
+    }
+    if (search) {
+      storeDocs = storeDocs.filter(
+        (d) =>
+          d.original_filename.toLowerCase().includes(search) ||
+          (d.document_index && d.document_index.toLowerCase().includes(search))
+      );
+    }
+    docs = storeDocs;
   }
+
+  const totalChunks = docs.reduce((acc, d) => acc + (d.chunk_count || 0), 0);
+  const readyDocuments = docs.filter((d) => d.status === 'ready').length;
 
   return NextResponse.json({
     documents: docs,
     stats: {
       totalDocuments: docs.length,
-      totalChunks: store.chunks.filter((c) => c.workspace_id === ctx.workspaceId).length,
-      readyDocuments: docs.filter((d) => d.status === 'ready').length,
+      totalChunks,
+      readyDocuments,
     },
   });
 }
@@ -72,8 +85,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      document: createdDoc,
+      document: createdDoc || {
+        id: result.documentId,
+        status: result.status,
+        chunk_count: result.chunkCount,
+        storage_path: result.storagePath,
+      },
       chunkCount: result.chunkCount,
+      batchId: result.batchId,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Failed to process document';
@@ -98,21 +117,15 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Missing document id' }, { status: 400 });
     }
 
-    // Verify ownership — document must belong to the authenticated workspace
-    const store = getStore();
-    const doc = store.documents.find((d) => d.id === id);
-    if (doc && doc.workspace_id !== ctx.workspaceId) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
     const result = await deleteDocumentCascade(id, ctx.workspaceId);
+
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, id });
+    return NextResponse.json({ success: true, documentId: id });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Delete failed';
+    const message = error instanceof Error ? error.message : 'Failed to delete document';
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

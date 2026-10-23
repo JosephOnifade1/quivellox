@@ -12,11 +12,12 @@ import {
   Settings,
   User,
   PlusCircle,
-  FolderOpen,
   LogOut,
+  ShieldCheck,
 } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 interface SidebarProps {
   onAddDocumentClick?: () => void;
@@ -31,25 +32,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const pathname = usePathname();
 
-  const navItems = [
+  const primaryNav = [
     {
-      name: 'Overview',
+      name: 'Home',
       href: '/app',
       icon: LayoutDashboard,
       exact: true,
+    },
+    {
+      name: 'Ask',
+      href: '/app/ask',
+      icon: Sparkles,
+      exact: false,
+      badge: 'RAG',
     },
     {
       name: 'Knowledge',
       href: '/app/knowledge',
       icon: FileText,
       exact: false,
-    },
-    {
-      name: 'Ask Quellivox',
-      href: '/app/ask',
-      icon: Sparkles,
-      exact: false,
-      badge: 'RAG',
     },
     {
       name: 'Conversations',
@@ -85,29 +86,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return pathname.startsWith(href);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/signout', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+      });
+    } catch (err) {
+      console.error('Sign out error', err);
+    } finally {
+      window.location.href = '/login';
+    }
+  };
+
   return (
     <aside
       className={`flex flex-col h-full bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] w-64 select-none shrink-0 ${className}`}
     >
       {/* Top Header & Brand */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-[var(--border-subtle)]">
+      <div className="h-14 px-4 flex items-center justify-between border-b border-[var(--border-subtle)]">
         <Link href="/app" onClick={onCloseMobile} className="focus:outline-none">
           <Logo size="md" />
         </Link>
         <ThemeToggle />
       </div>
 
-      {/* Workspace Selector Bar */}
-      <div className="px-3 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/50">
-        <div className="flex items-center justify-between px-2 py-1.5 rounded-[8px] bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-primary)] shadow-sm">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <FolderOpen className="w-3.5 h-3.5 text-[var(--accent-citron-muted)] shrink-0" />
-            <span className="truncate font-medium">Research Workspace</span>
-          </div>
-          <span className="text-[10px] text-[var(--text-muted)] bg-[var(--bg-surface-elevated)] px-1.5 py-0.5 rounded font-mono">
-            DEV
-          </span>
-        </div>
+      {/* Workspace Context Switcher */}
+      <div className="p-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/30">
+        <WorkspaceSwitcher />
       </div>
 
       {/* Primary Action Button */}
@@ -115,19 +121,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onAddDocumentClick}
           type="button"
-          className="w-full h-9 flex items-center justify-center gap-2 rounded-[8px] bg-[var(--accent-citron)] text-[var(--accent-citron-text)] hover:bg-[var(--accent-citron-muted)] font-semibold text-xs tracking-wide shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--accent-citron)]"
+          className="w-full h-9 flex items-center justify-center gap-2 rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] font-medium text-xs tracking-tight shadow-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle className="w-4 h-4 text-[var(--accent-citron)]" />
           <span>Add Documents</span>
         </button>
       </div>
 
       {/* Main Navigation List */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1">
-        <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] px-2 py-1 font-semibold">
-          Knowledge Desk
+        <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] px-2.5 py-1 font-semibold">
+          Evidence Desk
         </div>
-        {navItems.map((item) => {
+        {primaryNav.map((item) => {
           const active = isActive(item.href, item.exact);
           const Icon = item.icon;
           return (
@@ -135,10 +141,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               key={item.name}
               href={item.href}
               onClick={onCloseMobile}
-              className={`flex items-center justify-between px-2.5 py-2 rounded-[8px] text-xs font-medium transition-all ${
+              className={`flex items-center justify-between px-2.5 py-2 rounded-[5px] text-xs font-medium transition-all ${
                 active
-                  ? 'bg-[var(--accent-citron)]/15 text-[var(--text-primary)] border border-[var(--accent-citron)]/40 font-semibold'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] border border-transparent'
+                  ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] border-l-2 border-l-[var(--accent-citron)] border-y border-r border-transparent font-semibold shadow-xs'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]/60 border border-transparent'
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -150,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span>{item.name}</span>
               </div>
               {item.badge && (
-                <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-[var(--accent-citron)] text-[var(--accent-citron-text)] font-bold">
+                <span className="font-mono text-[9px] px-1.5 py-0.5 rounded-[3px] bg-[var(--accent-citron)]/20 border border-[var(--accent-citron-muted)]/40 text-[var(--text-primary)] font-semibold">
                   {item.badge}
                 </span>
               )}
@@ -158,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
 
-        <div className="pt-4 text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] px-2 py-1 font-semibold">
+        <div className="pt-4 text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] px-2.5 py-1 font-semibold">
           Settings & Config
         </div>
         {secondaryNav.map((item) => {
@@ -169,10 +175,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               key={item.name}
               href={item.href}
               onClick={onCloseMobile}
-              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-[8px] text-xs font-medium transition-all ${
+              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-[5px] text-xs font-medium transition-all ${
                 active
-                  ? 'bg-[var(--accent-citron)]/15 text-[var(--text-primary)] border border-[var(--accent-citron)]/40 font-semibold'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] border border-transparent'
+                  ? 'bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] border-l-2 border-l-[var(--accent-citron)] border-y border-r border-transparent font-semibold shadow-xs'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)]/60 border border-transparent'
               }`}
             >
               <Icon className="w-4 h-4 text-[var(--text-muted)]" />
@@ -182,22 +188,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
 
         <button
-          onClick={async () => {
-            try {
-              await fetch('/api/auth/signout', {
-                method: 'POST',
-                headers: { Accept: 'application/json' },
-              });
-            } catch (err) {
-              console.error('Sign out error', err);
-            } finally {
-              window.location.href = '/login';
-            }
-          }}
+          onClick={handleSignOut}
           type="button"
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-[8px] text-xs font-medium text-[var(--status-error)]/80 hover:text-[var(--status-error)] hover:bg-[var(--status-error)]/10 transition-all border border-transparent mt-1"
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-[5px] text-xs font-medium text-[var(--status-error)]/85 hover:text-[var(--status-error)] hover:bg-[var(--status-error-bg)] transition-all border border-transparent mt-1"
         >
-          <LogOut className="w-4 h-4 text-[var(--status-error)]/80" />
+          <LogOut className="w-4 h-4 text-[var(--status-error)]/85" />
           <span>Sign Out</span>
         </button>
       </div>
@@ -207,12 +202,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex items-center justify-between">
           <span className="font-semibold text-[var(--text-primary)]">v1.0.0-PROD</span>
           <span className="inline-flex items-center gap-1 text-[var(--status-success)] text-[10px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--status-success)] animate-pulse" />
-            pgvector live
+            <ShieldCheck className="w-3 h-3 text-[var(--status-success)]" />
+            Isolated
           </span>
         </div>
-        <div className="mt-1 text-[10px] text-[var(--text-muted)] truncate">
-          Grounded RAG Engine Active
+        <div className="mt-1 text-[10px] text-[var(--text-faint)] truncate">
+          Grounded Research Desk
         </div>
       </div>
     </aside>

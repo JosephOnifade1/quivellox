@@ -113,7 +113,7 @@ function LoginForm() {
           )}
 
           {/* Form */}
-          <div className="p-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[var(--panel-shadow)]">
+          <div className="p-6 rounded-[7px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-xs">
             <form onSubmit={handleLogin} className="space-y-4" noValidate>
               <div>
                 <label
@@ -133,7 +133,7 @@ function LoginForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full h-9 pl-9 pr-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-citron)] transition-colors disabled:opacity-60"
+                    className="w-full h-9 pl-9 pr-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] transition-colors disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -158,7 +158,7 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full h-9 pl-9 pr-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-citron)] transition-colors disabled:opacity-60"
+                    className="w-full h-9 pl-9 pr-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] transition-colors disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -167,7 +167,7 @@ function LoginForm() {
                 id="login-submit"
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 h-9 px-4 rounded-lg bg-[var(--accent-citron)] text-[var(--accent-citron-text)] text-sm font-semibold hover:bg-[var(--accent-citron-muted)] transition-colors mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 h-9 px-4 rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] text-sm font-medium transition-all shadow-xs mt-2 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
               >
                 {loading ? (
                   <>

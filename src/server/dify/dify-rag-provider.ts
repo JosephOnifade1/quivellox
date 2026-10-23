@@ -7,8 +7,9 @@ import {
   GroundedRAGResult,
 } from '../rag/provider-interface';
 import { DifyClient } from './dify-client';
-import { DocumentStatus, DocumentChunk, Citation } from '@/types';
+import { Document, DocumentChunk, DocumentStatus, Citation } from '@/types';
 import { getStore } from '@/lib/rag-store';
+import { listDocumentsByWorkspace } from '../db/documents-repository';
 import { validateCitations } from '../rag/citation-validator';
 import { generateGroundedResponse } from '../rag/generator';
 
@@ -106,17 +107,57 @@ export class DifyRAGProvider implements IRAGProvider {
     // 1. Retrieve top-K relevant segments from Dify Knowledge Base
     const difySegments = await this.client.retrieveSegments(datasetId, params.question, params.topK || 4);
 
-    const store = getStore();
-    const workspaceDocs = store.documents.filter((d) => d.workspace_id === params.workspaceId);
+    // 2. Fetch workspace documents (preferring DB, falling back to local store)
+    let workspaceDocs: Document[] = [];
+    try {
+      const dbDocs = await listDocumentsByWorkspace(params.workspaceId);
+      if (dbDocs && dbDocs.length > 0) {
+        workspaceDocs = dbDocs;
+      }
+    } catch {
+      // fallback to store
+    }
 
-    // 2. Map and verify segments against Quellivox trusted workspace documents
+    if (workspaceDocs.length === 0) {
+      const store = getStore();
+      workspaceDocs = store.documents.filter((d) => d.workspace_id === params.workspaceId);
+    }
+
+    // STRICT PHASE 3: Only documents with status === 'ready' may serve as evidence
+    const readyDocs = workspaceDocs.filter((d) => d.status === 'ready');
+    const indexingDocs = workspaceDocs.filter((d) =>
+      ['queued', 'extracting', 'chunking', 'indexing'].includes(d.status)
+    );
+
+    if (workspaceDocs.length > 0 && readyDocs.length === 0) {
+      if (indexingDocs.length > 0) {
+        return {
+          answer: 'Your workspace documents are currently still indexing and being prepared. Please allow ingestion to complete before querying for evidence.',
+          citations: [],
+          retrievedChunks: [],
+          insufficientEvidence: true,
+          provider: this.name,
+          queryTimeMs: Date.now() - startTime,
+        };
+      }
+      return {
+        answer: 'I could not find any ready, indexed documents in your authorized workspace to answer this question.',
+        citations: [],
+        retrievedChunks: [],
+        insufficientEvidence: true,
+        provider: this.name,
+        queryTimeMs: Date.now() - startTime,
+      };
+    }
+
+    // 3. Map and verify segments strictly against ready Quellivox workspace documents
     const retrievedChunks: DocumentChunk[] = [];
     const validCandidateCitations: Citation[] = [];
 
     for (const seg of difySegments) {
       // Find trusted Quellivox document by dify_document_id or filename
-      const matchedDoc = workspaceDocs.find(
-        (d) => d.dify_document_id === seg.documentId || d.original_filename === seg.documentName
+      const matchedDoc = readyDocs.find(
+        (d) => (d.dify_document_id && d.dify_document_id === seg.documentId) || d.original_filename === seg.documentName
       );
 
       const chunk: DocumentChunk = {
@@ -154,9 +195,9 @@ export class DifyRAGProvider implements IRAGProvider {
       };
     }
 
-    // 3. Construct canonical RetrievedPassage array
+    // 4. Construct canonical RetrievedPassage array
     const passages = retrievedChunks.map((chunk, idx) => {
-      const matchedDoc = workspaceDocs.find((d) => d.id === chunk.document_id);
+      const matchedDoc = readyDocs.find((d) => d.id === chunk.document_id);
       return {
         chunk,
         score: chunk.similarity || 0.8,
@@ -165,19 +206,19 @@ export class DifyRAGProvider implements IRAGProvider {
       };
     });
 
-    // 4. Generate grounded answer
+    // 5. Generate grounded answer
     const generation = await generateGroundedResponse(params.question, passages);
 
-    // 5. Strict Citation Validation: ensure all returned citations map to retrieved passages
+    // 6. Strict Citation Validation: ensure all returned citations map to retrieved passages
     const validation = validateCitations(
       generation.citations,
       passages
     );
 
-    // 6. Security filter: citations must belong strictly to authorized workspace documents
-    const workspaceDocIds = new Set(workspaceDocs.map((d) => d.id));
+    // 7. Security filter: citations must belong strictly to authorized, ready workspace documents
+    const readyDocIds = new Set(readyDocs.map((d) => d.id));
     const verifiedCitations = validation.validCitations.filter((c) =>
-      workspaceDocIds.has(c.document_id)
+      readyDocIds.has(c.document_id)
     );
 
     return {

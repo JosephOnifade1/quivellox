@@ -1,4 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { getStore } from '@/lib/rag-store';
 import { NextResponse } from 'next/server';
 
 export interface AuthContext {
@@ -23,28 +25,40 @@ export async function resolveUserWorkspace(
   const supabase = await createServerSupabaseClient();
   if (!supabase) return null;
 
-  // Prefer owned workspaces first
-  const { data: owned } = await supabase
-    .from('workspaces')
-    .select('id')
-    .eq('owner_id', userId)
-    .limit(1)
-    .single();
+  try {
+    // Prefer owned workspaces first
+    const query = supabase
+      .from('workspaces')
+      .select('id')
+      .eq('owner_id', userId)
+      .limit(1);
 
-  if (owned) {
-    return { workspaceId: owned.id, isOwner: true };
-  }
+    const { data: owned } =
+      typeof query.maybeSingle === 'function'
+        ? await query.maybeSingle()
+        : await query.single();
 
-  // Fall back to membership
-  const { data: member } = await supabase
-    .from('workspace_members')
-    .select('workspace_id')
-    .eq('user_id', userId)
-    .limit(1)
-    .single();
+    if (owned && owned.id) {
+      return { workspaceId: owned.id, isOwner: true };
+    }
 
-  if (member) {
-    return { workspaceId: member.workspace_id, isOwner: false };
+    // Fall back to membership
+    const memQuery = supabase
+      .from('workspace_members')
+      .select('workspace_id')
+      .eq('user_id', userId)
+      .limit(1);
+
+    const { data: member } =
+      typeof memQuery.maybeSingle === 'function'
+        ? await memQuery.maybeSingle()
+        : await memQuery.single();
+
+    if (member && member.workspace_id) {
+      return { workspaceId: member.workspace_id, isOwner: false };
+    }
+  } catch (err) {
+    console.warn('[Authorization] resolveUserWorkspace notice:', err);
   }
 
   return null;
@@ -52,12 +66,53 @@ export async function resolveUserWorkspace(
 
 /**
  * Derives a full AuthContext from the authenticated user session.
- * Returns null if workspace resolution fails (user has no workspace yet).
+ * Auto-provisions personal workspace if none exists for the authenticated user.
  */
 export async function getAuthContext(
   userId: string
 ): Promise<AuthContext | null> {
-  const ws = await resolveUserWorkspace(userId);
+  let ws = await resolveUserWorkspace(userId);
+
+  // If no workspace is found in DB, auto-provision personal workspace for user
+  if (!ws) {
+    try {
+      const adminClient = createAdminClient();
+      const supabase = await createServerSupabaseClient();
+      const clientToUse = adminClient || supabase;
+
+      if (clientToUse) {
+        const newWorkspaceId = crypto.randomUUID();
+        const defaultDataset = process.env.DIFY_DEFAULT_DATASET_ID || null;
+
+        const { data: newWs, error: insertError } = await clientToUse
+          .from('workspaces')
+          .insert({
+            id: newWorkspaceId,
+            name: 'Personal Knowledge',
+            owner_id: userId,
+            dify_dataset_id: defaultDataset,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .select('id')
+          .single();
+
+        if (newWs && !insertError) {
+          await clientToUse.from('workspace_members').insert({
+            workspace_id: newWs.id,
+            user_id: userId,
+            role: 'owner',
+            created_at: new Date().toISOString(),
+          });
+
+          ws = { workspaceId: newWs.id, isOwner: true };
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   if (!ws) return null;
   return { userId, workspaceId: ws.workspaceId, isOwner: ws.isOwner };
 }

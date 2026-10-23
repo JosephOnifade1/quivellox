@@ -19,6 +19,7 @@ import {
   Sparkles,
   X,
   FileCode,
+  RefreshCw,
 } from 'lucide-react';
 import { Document, DocumentChunk } from '@/types';
 import { INITIAL_CHUNKS } from '@/lib/rag-store';
@@ -42,16 +43,18 @@ export default function KnowledgePage() {
   const [inspectDoc, setInspectDoc] = useState<Document | null>(null);
   const [docChunks, setDocChunks] = useState<DocumentChunk[]>([]);
 
-  const fetchDocuments = async () => {
+  const [retryingDocId, setRetryingDocId] = useState<string | null>(null);
+
+  const fetchDocuments = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const res = await fetch('/api/documents');
       const data = await res.json();
       setDocuments(data.documents || []);
     } catch (e) {
       console.error(e);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -62,8 +65,44 @@ export default function KnowledgePage() {
     return () => window.removeEventListener('document_uploaded', handleUpload);
   }, []);
 
+  // Poll in-progress documents every 3 seconds until all reach terminal status (ready/failed)
+  useEffect(() => {
+    const hasActiveDocs = documents.some((d) =>
+      ['queued', 'extracting', 'chunking', 'indexing'].includes(d.status)
+    );
+
+    if (!hasActiveDocs) return;
+
+    const interval = setInterval(() => {
+      fetchDocuments(true);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [documents]);
+
+  const handleRetry = async (id: string) => {
+    try {
+      setRetryingDocId(id);
+      const res = await fetch(`/api/documents/${id}/retry`, {
+        method: 'POST',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to retry ingestion');
+      }
+      await fetchDocuments(true);
+    } catch (err) {
+      console.error('Error retrying ingestion:', err);
+    } finally {
+      setRetryingDocId(null);
+    }
+  };
+
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const handleFileUpload = async (file: File) => {
     setUploading(true);
+    setUploadError(null);
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -71,12 +110,17 @@ export default function KnowledgePage() {
         method: 'POST',
         body: formData,
       });
-      if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setUploadError(data.error || 'Failed to process document');
+      } else {
         setShowUploadZone(false);
-        fetchDocuments();
       }
+      await fetchDocuments();
     } catch (e) {
       console.error(e);
+      setUploadError(e instanceof Error ? e.message : 'Network error during upload');
+      await fetchDocuments();
     } finally {
       setUploading(false);
     }
@@ -187,6 +231,13 @@ export default function KnowledgePage() {
           <p className="text-[11px] font-mono text-[var(--text-muted)]">
             PDF · Markdown · TXT · Automatic recursive chunking & vector indexing
           </p>
+
+          {uploadError && (
+            <div className="mt-4 p-3 rounded-lg border border-[var(--status-error)]/40 bg-[var(--status-error-bg)] text-xs text-[var(--status-error)] flex items-center justify-center gap-2 max-w-md mx-auto">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{uploadError}</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -268,15 +319,44 @@ export default function KnowledgePage() {
                   </div>
 
                   <div className="col-span-2">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-medium ${status.color}`}
-                    >
-                      <StatusIcon className="w-3 h-3" />
-                      {status.label}
-                    </span>
+                    <div className="flex flex-col gap-0.5">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-medium ${status.color} w-fit`}
+                      >
+                        <StatusIcon
+                          className={`w-3 h-3 ${
+                            ['extracting', 'chunking', 'indexing'].includes(doc.status)
+                              ? 'animate-spin'
+                              : ''
+                          }`}
+                        />
+                        {status.label}
+                      </span>
+                      {doc.status === 'failed' && doc.processing_error && (
+                        <span
+                          className="text-[9px] text-[var(--status-error)] truncate max-w-[140px]"
+                          title={doc.processing_error}
+                        >
+                          {doc.processing_error}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="col-span-2 flex items-center justify-end gap-2">
+                    {doc.status === 'failed' && (
+                      <button
+                        onClick={() => handleRetry(doc.id)}
+                        disabled={retryingDocId === doc.id}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-[var(--status-error)]/40 text-[var(--status-error)] text-[10px] font-mono hover:bg-[var(--status-error-bg)] transition-colors disabled:opacity-50"
+                        title="Retry ingestion"
+                      >
+                        <RefreshCw
+                          className={`w-3 h-3 ${retryingDocId === doc.id ? 'animate-spin' : ''}`}
+                        />
+                        Retry
+                      </button>
+                    )}
                     <button
                       onClick={() => openInspector(doc)}
                       className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] transition-colors"

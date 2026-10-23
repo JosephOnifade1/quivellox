@@ -15,6 +15,7 @@ import {
   FileCode,
   AlertCircle,
   Loader2,
+  Download,
 } from 'lucide-react';
 import { Document, DocumentChunk } from '@/types';
 
@@ -27,28 +28,71 @@ function DocumentDetailContent() {
   const [chunks, setChunks] = useState<DocumentChunk[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+
+  const fetchDoc = async (silent = false) => {
+    try {
+      if (!silent) setLoading(true);
+      const res = await fetch(`/api/documents/${documentId}`);
+      if (!res.ok) {
+        throw new Error('Document not found');
+      }
+      const data = await res.json();
+      setDocument(data.document);
+      setChunks(data.chunks || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (!silent) setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDoc = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/documents/${documentId}`);
-        if (!res.ok) {
-          throw new Error('Document not found');
-        }
-        const data = await res.json();
-        setDocument(data.document);
-        setChunks(data.chunks || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     if (documentId) {
       fetchDoc();
     }
   }, [documentId]);
+
+  // Poll status while document is non-terminal
+  useEffect(() => {
+    if (!document) return;
+    const isProcessing = ['queued', 'extracting', 'chunking', 'indexing'].includes(document.status);
+    if (!isProcessing) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/documents/${documentId}/status`);
+        if (res.ok) {
+          const statusData = await res.json();
+          if (statusData.status && statusData.status !== document.status) {
+            await fetchDoc(true);
+          }
+        }
+      } catch (err) {
+        console.error('Error polling status:', err);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [document, documentId]);
+
+  const handleRetry = async () => {
+    setRetrying(true);
+    try {
+      const res = await fetch(`/api/documents/${documentId}/retry`, {
+        method: 'POST',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to retry ingestion');
+      }
+      await fetchDoc(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to permanently delete this document and its vector embeddings?')) return;
@@ -100,6 +144,26 @@ function DocumentDetailContent() {
         </Link>
 
         <div className="flex items-center gap-2">
+          {document.status === 'failed' && (
+            <button
+              onClick={handleRetry}
+              disabled={retrying}
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-[var(--status-error)]/40 text-[var(--status-error)] text-xs font-medium hover:bg-[var(--status-error-bg)] transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
+              {retrying ? 'Retrying…' : 'Retry Ingestion'}
+            </button>
+          )}
+
+          <a
+            href={`/api/documents/${documentId}/download`}
+            download={document.original_filename}
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs font-medium hover:bg-[var(--bg-surface-elevated)] transition-colors"
+          >
+            <Download className="w-3.5 h-3.5 text-[var(--accent-citron-muted)]" />
+            Download Original
+          </a>
+
           <button
             onClick={handleDelete}
             disabled={deleting}
@@ -110,6 +174,31 @@ function DocumentDetailContent() {
           </button>
         </div>
       </div>
+
+      {/* Failure Banner if Ingestion Failed */}
+      {document.status === 'failed' && (
+        <div className="p-4 rounded-xl border border-[var(--status-error)]/30 bg-[var(--status-error-bg)] flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <XCircle className="w-5 h-5 text-[var(--status-error)] shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+                Document Ingestion Failed
+              </h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                {document.processing_error || 'Dify vector indexing encountered an error while parsing this document.'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={handleRetry}
+            disabled={retrying}
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[var(--status-error)] text-white text-xs font-medium hover:opacity-90 transition-opacity shrink-0 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
+            Retry Ingestion
+          </button>
+        </div>
+      )}
 
       {/* Document Overview Banner */}
       <div className="p-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-4 shadow-sm">
@@ -126,9 +215,22 @@ function DocumentDetailContent() {
               <h1 className="text-lg font-bold text-[var(--text-primary)] truncate">
                 {document.original_filename}
               </h1>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-[var(--status-success)] bg-[var(--status-success-bg)]">
-                <CheckCircle2 className="w-3 h-3" /> Ready for retrieval
-              </span>
+
+              {document.status === 'ready' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-[var(--status-success)] bg-[var(--status-success-bg)]">
+                  <CheckCircle2 className="w-3 h-3" /> Ready for retrieval
+                </span>
+              )}
+              {document.status === 'failed' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-[var(--status-error)] bg-[var(--status-error-bg)]">
+                  <XCircle className="w-3 h-3" /> Failed
+                </span>
+              )}
+              {['queued', 'extracting', 'chunking', 'indexing'].includes(document.status) && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-[var(--status-warning)] bg-[var(--status-warning-bg)]">
+                  <Loader2 className="w-3 h-3 animate-spin" /> {document.status}…
+                </span>
+              )}
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 pt-4 border-t border-[var(--border-subtle)] text-xs">

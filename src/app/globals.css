@@ -1,81 +1,204 @@
 @import "tailwindcss";
 
+@theme {
+  --color-desk-ink: #151713;
+  --color-desk-elevated: #20231E;
+  --color-desk-secondary: #292D26;
+  --color-desk-paper: #F5F4EE;
+  --color-desk-surface: #FFFEFA;
+  --color-desk-muted-surface: #ECEBE3;
+  --color-desk-hairline: #DADBD1;
+  --color-desk-citron: #D8F36A;
+  --color-desk-citron-muted: #B7CE58;
+
+  --font-heading: var(--font-heading), var(--font-body), sans-serif;
+  --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "IBM Plex Mono", Menlo, monospace;
+  --font-serif: var(--font-serif), Georgia, Cambria, serif;
+}
+
 @layer base {
   :root {
-    /* The Evidence Desk - Light Paper Palette */
+    /* Base Desk Palette Tokens (Literals) */
+    --desk-ink: #151713;
+    --desk-elevated: #20231E;
+    --desk-secondary: #292D26;
+    --desk-paper: #F5F4EE;
+    --desk-surface: #FFFEFA;
+    --desk-muted-surface: #ECEBE3;
+    --desk-hairline: #DADBD1;
+    --desk-citron: #D8F36A;
+    --desk-citron-muted: #B7CE58;
+
+    /* Semantic Mappings: Light Paper Desk */
     --bg-main: #F5F4EE;
     --bg-surface: #FFFEFA;
     --bg-surface-elevated: #ECEBE3;
     --border-subtle: #DADBD1;
     --border-strong: #C4C6B7;
 
-    --text-primary: #24271F;
-    --text-muted: #707469;
-    --text-faint: #989C90;
+    --text-primary: #151713;
+    --text-muted: #5D6257;
+    --text-faint: #8E9387;
 
     --accent-citron: #D8F36A;
     --accent-citron-muted: #B7CE58;
-    --accent-citron-text: #20231A;
+    --accent-citron-text: #151713;
+    --focus-ring: #D8F36A;
 
     --status-success: #15803D;
-    --status-success-bg: #DCFCE7;
+    --status-success-bg: #E8F5E9;
+    --status-success-border: #C8E6C9;
+
     --status-warning: #B45309;
-    --status-warning-bg: #FEF3C7;
+    --status-warning-bg: #FEF9C3;
+    --status-warning-border: #FDE047;
+
     --status-error: #B91C1C;
     --status-error-bg: #FEE2E2;
+    --status-error-border: #FCA5A5;
+
     --status-info: #475569;
     --status-info-bg: #F1F5F9;
+    --status-info-border: #CBD5E1;
 
-    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-    --panel-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    /* Backward compatibility with legacy Geist tokens */
+    --font-geist-sans: var(--font-body);
+    --font-geist-mono: var(--font-mono);
+
+    /* Clean archival shadows */
+    --card-shadow: 0 1px 2px 0 rgba(21, 23, 19, 0.04);
+    --panel-shadow: 0 3px 8px -2px rgba(21, 23, 19, 0.06), 0 1px 2px -1px rgba(21, 23, 19, 0.04);
   }
 
   .dark {
-    /* The Evidence Desk - Dark Ink Palette */
+    /* Semantic Mappings: Dark Ink Desk */
     --bg-main: #151713;
     --bg-surface: #20231E;
     --bg-surface-elevated: #292D26;
-    --border-subtle: #383D34;
-    --border-strong: #4B5244;
+    --border-subtle: #343930;
+    --border-strong: #495044;
 
-    --text-primary: #F4F3EB;
-    --text-muted: #B4B8AC;
-    --text-faint: #7A8072;
+    --text-primary: #F5F4EE;
+    --text-muted: #A3A89D;
+    --text-faint: #6E7368;
 
     --accent-citron: #D8F36A;
     --accent-citron-muted: #B7CE58;
-    --accent-citron-text: #20231A;
+    --accent-citron-text: #151713;
+    --focus-ring: #D8F36A;
 
     --status-success: #4ADE80;
-    --status-success-bg: #052E16;
-    --status-warning: #FBBF24;
-    --status-warning-bg: #451A03;
-    --status-error: #F87171;
-    --status-error-bg: #450A0A;
-    --status-info: #94A3B8;
-    --status-info-bg: #1E293B;
+    --status-success-bg: #0B2914;
+    --status-success-border: #14532D;
 
-    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-    --panel-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    --status-warning: #FBBF24;
+    --status-warning-bg: #301E06;
+    --status-warning-border: #78350F;
+
+    --status-error: #F87171;
+    --status-error-bg: #350E0E;
+    --status-error-border: #7F1D1D;
+
+    --status-info: #94A3B8;
+    --status-info-bg: #192231;
+    --status-info-border: #334155;
+
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+    --panel-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
   }
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  min-height: 100vh;
+}
+
+/* Typography Utilities */
+.font-heading {
+  font-family: var(--font-heading), var(--font-body), sans-serif;
+}
+
+.font-body {
+  font-family: var(--font-body), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, Cambria, serif;
 }
 
 .font-editorial {
   font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
-body {
-  background-color: var(--bg-main);
+.font-mono-code {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Editorial Hierarchy Primitives */
+.desk-h1 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  min-height: 100vh;
+}
+
+.desk-h2 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.desk-h3 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.desk-meta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+  color: var(--text-muted);
+}
+
+.desk-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Focus and Active States */
+.focus-desk {
+  outline: none;
+}
+.focus-desk:focus-visible {
+  outline: 2px solid var(--accent-citron);
+  outline-offset: 1px;
 }
 
 /* Custom Scrollbar for The Evidence Desk */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -84,7 +207,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border-subtle);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -96,10 +219,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 0.1rem 0.4rem;
+  padding: 0.12rem 0.45rem;
   border-radius: 4px;
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
@@ -114,9 +237,4 @@ body {
   border-color: var(--accent-citron-muted);
   color: var(--accent-citron-text);
   transform: translateY(-1px);
-}
-
-/* Code and Mono text */
-.font-mono-code {
-  font-family: var(--font-geist-mono), ui-monospace, "IBM Plex Mono", Menlo, monospace;
 }

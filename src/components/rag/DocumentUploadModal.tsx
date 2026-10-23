@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useCallback } from 'react';
 import { X, Upload, FileText, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
@@ -114,15 +114,15 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose} />
-      <div className="relative w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-[var(--panel-shadow)] overflow-hidden">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={handleClose} />
+      <div className="relative w-full max-w-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[7px] shadow-[var(--panel-shadow)] overflow-hidden">
         {/* Header */}
         <div className="h-14 px-5 flex items-center justify-between border-b border-[var(--border-subtle)]">
           <div>
-            <h2 className="text-sm font-semibold text-[var(--text-primary)]">Add document</h2>
+            <h2 className="text-sm font-heading font-semibold text-[var(--text-primary)]">Add document</h2>
             <p className="text-[11px] font-mono text-[var(--text-muted)]">Upload to your knowledge workspace</p>
           </div>
-          <button onClick={handleClose} disabled={uploadState === 'uploading'} className="p-1.5 rounded-lg border border-transparent hover:border-[var(--border-subtle)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] transition-all" aria-label="Close">
+          <button onClick={handleClose} disabled={uploadState === 'uploading'} className="p-1.5 rounded-[5px] border border-transparent hover:border-[var(--border-subtle)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-muted)] transition-all" aria-label="Close">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -133,7 +133,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${isDragging ? 'border-[var(--accent-citron)] bg-[var(--accent-citron)]/5' : selectedFile ? 'border-[var(--status-success)] bg-[var(--status-success-bg)]/30' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)] bg-[var(--bg-main)]'}`}
+            className={`relative border border-dashed rounded-[6px] p-8 text-center transition-all ${isDragging ? 'border-[var(--accent-citron)] bg-[var(--accent-citron)]/5' : selectedFile ? 'border-[var(--status-success)] bg-[var(--status-success-bg)]/30' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)] bg-[var(--bg-main)]'}`}
           >
             <input type="file" id="file-upload" className="sr-only" accept=".pdf,.txt,.md,.markdown" onChange={handleFileInput} />
 
@@ -148,7 +148,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               <div className="space-y-3">
                 <Upload className="w-8 h-8 mx-auto text-[var(--text-muted)]" />
                 <div>
-                  <label htmlFor="file-upload" className="cursor-pointer text-sm font-medium text-[var(--accent-citron-muted)] hover:underline">Browse file</label>
+                  <label htmlFor="file-upload" className="cursor-pointer text-sm font-medium text-[var(--text-primary)] underline hover:text-[var(--accent-citron-muted)]">Browse file</label>
                   <span className="text-sm text-[var(--text-muted)]"> or drag and drop</span>
                 </div>
                 <div className="text-[11px] font-mono text-[var(--text-muted)]">
@@ -160,14 +160,14 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
           {/* Error */}
           {errorMessage && (
-            <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-[var(--status-error-bg)] border border-[var(--status-error)]/20 text-[11px] text-[var(--status-error)]">
+            <div className="mt-3 flex items-start gap-2 p-3 rounded-[5px] bg-[var(--status-error-bg)] border border-[var(--status-error-border)] text-[11px] text-[var(--status-error)]">
               <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
               {errorMessage}
             </div>
           )}
 
           {/* Config note */}
-          <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]">
+          <div className="mt-3 flex items-start gap-2 p-3 rounded-[5px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]">
             <FileText className="w-3.5 h-3.5 mt-0.5 text-[var(--text-muted)] shrink-0" />
             <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
               Documents are stored privately and indexed for semantic search. Configure your Supabase and AI provider credentials to enable full processing.
@@ -177,16 +177,16 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
         {/* Actions */}
         <div className="px-5 pb-5 flex items-center justify-end gap-3">
-          <button onClick={handleClose} disabled={uploadState === 'uploading'} className="h-9 px-4 text-sm font-medium rounded-lg border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] transition-all disabled:opacity-50">
+          <button onClick={handleClose} disabled={uploadState === 'uploading'} className="h-9 px-4 text-sm font-medium rounded-[6px] border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] transition-all disabled:opacity-50">
             Cancel
           </button>
           <button
             onClick={handleUpload}
             disabled={!selectedFile || uploadState === 'uploading' || uploadState === 'success'}
-            className="h-9 px-5 text-sm font-semibold rounded-lg bg-[var(--accent-citron)] text-[var(--accent-citron-text)] hover:bg-[var(--accent-citron-muted)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="h-9 px-5 text-sm font-medium rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
           >
-            {uploadState === 'uploading' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            {uploadState === 'success' && <CheckCircle2 className="w-3.5 h-3.5" />}
+            {uploadState === 'uploading' && <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--accent-citron)]" />}
+            {uploadState === 'success' && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--status-success)]" />}
             {uploadState === 'uploading' ? 'Uploading…' : uploadState === 'success' ? 'Uploaded!' : 'Upload document'}
           </button>
         </div>

@@ -96,7 +96,7 @@ export default function ConversationsPage() {
             {filtered.map((c) => (
               <Link
                 key={c.id}
-                href={`/app/ask?q=${encodeURIComponent(c.title)}`}
+                href={`/app/ask?conversationId=${c.id}`}
                 className="p-4 flex items-center justify-between gap-4 hover:bg-[var(--bg-surface-elevated)]/40 transition-colors group"
               >
                 <div className="flex items-start gap-3 min-w-0">

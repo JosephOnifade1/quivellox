@@ -60,6 +60,10 @@
   }
 }
 
+.font-editorial {
+  font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
 body {
   background-color: var(--bg-main);
   color: var(--text-primary);

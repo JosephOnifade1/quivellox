@@ -1,4 +1,4 @@
-import { Document, DocumentChunk, Citation, Conversation, Message, ActivityEventType } from '@/types';
+import { Document, DocumentChunk, Citation, Conversation, Message, ActivityEventType, Workspace } from '@/types';
 
 // Pre-seeded demo documents for instant out-of-the-box portfolio evaluation
 export const INITIAL_DOCUMENTS: Document[] = [
@@ -228,6 +228,16 @@ class GlobalStore {
   documents: Document[] = [...INITIAL_DOCUMENTS];
   chunks: DocumentChunk[] = [...INITIAL_CHUNKS];
   activity: ActivityEvent[] = [...INITIAL_ACTIVITY];
+  workspaces: Workspace[] = [
+    {
+      id: 'ws-demo',
+      name: 'Personal Knowledge',
+      owner_id: 'usr-demo',
+      dify_dataset_id: process.env.DIFY_DEFAULT_DATASET_ID || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ];
   conversations: Conversation[] = [
     {
       id: 'conv-001',

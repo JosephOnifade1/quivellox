@@ -158,9 +158,11 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-medium text-[#656A5F] dark:text-[#9DA396]">
-                  <div className="w-5 h-5 rounded-full bg-[#D8F36A] text-[#1E221B] flex items-center justify-center font-bold text-[10px]">
-                    AC
-                  </div>
+                  <img
+                    src="/alex-carter.jpg"
+                    alt="Alex Carter"
+                    className="w-5 h-5 rounded-full object-cover border border-[#D8F36A]"
+                  />
                   <span>Alex Carter · Pro Plan</span>
                 </div>
               </div>
@@ -489,9 +491,11 @@ export default function LandingPage() {
             </p>
 
             <div className="flex items-center gap-3 pt-2">
-              <div className="w-10 h-10 rounded-full bg-[#20392A] border border-[#2E4E3B] flex items-center justify-center font-bold text-xs text-[#D8F36A]">
-                SM
-              </div>
+              <img
+                src="/sarah-mitchell.jpg"
+                alt="Sarah Mitchell"
+                className="w-11 h-11 rounded-full object-cover border-2 border-[#D8F36A]/60 shadow-sm"
+              />
               <div>
                 <div className="text-sm font-bold text-[#FAFAF6]">Sarah Mitchell</div>
                 <div className="text-xs text-[#9EBAAA]">Product Manager</div>

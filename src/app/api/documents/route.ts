@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ingestDocument, deleteDocumentCascade } from '@/server/ingestion/ingestion-service';
 import { getStore } from '@/lib/rag-store';
-import { Document, DocumentChunk } from '@/types';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const store = getStore();
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get('q')?.toLowerCase() || '';
+
+  let docs = store.documents;
+  if (search) {
+    docs = docs.filter(
+      (d) =>
+        d.original_filename.toLowerCase().includes(search) ||
+        (d.document_index && d.document_index.toLowerCase().includes(search))
+    );
+  }
+
   return NextResponse.json({
-    documents: store.documents,
+    documents: docs,
     stats: {
-      totalDocuments: store.documents.length,
+      totalDocuments: docs.length,
       totalChunks: store.chunks.length,
-      readyDocuments: store.documents.filter((d) => d.status === 'ready').length,
+      readyDocuments: docs.filter((d) => d.status === 'ready').length,
     },
   });
 }
@@ -18,85 +30,38 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
-    const store = getStore();
+    const workspaceId = (formData.get('workspaceId') as string) || 'ws-demo';
+    const userId = (formData.get('userId') as string) || 'usr-demo';
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const filename = file.name;
-    const fileSize = file.size;
-    const mimeType = file.type || 'text/plain';
-    const textContent = await file.text();
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await ingestDocument({
+      workspaceId,
+      userId,
+      filename: file.name,
+      fileBuffer: arrayBuffer,
+      mimeType: file.type,
+    });
 
-    const docIndexNum = store.documents.length + 1;
-    const docIndex = `DOC-00${docIndexNum}`;
-    const docId = `doc-${Date.now()}`;
-
-    // Simple chunking into segments
-    const rawChunks = textContent
-      .split(/\n\s*\n/)
-      .filter((block) => block.trim().length > 30);
-
-    const chunkList: DocumentChunk[] = [];
-
-    if (rawChunks.length === 0) {
-      // Single chunk fallback
-      chunkList.push({
-        id: `chk-${Date.now()}-0`,
-        document_id: docId,
-        workspace_id: 'ws-demo',
-        chunk_index: 0,
-        page_number: 1,
-        section_title: 'Overview',
-        content: textContent.trim() || 'Uploaded document content',
-        token_count: Math.ceil(textContent.length / 4),
-        created_at: new Date().toISOString(),
-      });
-    } else {
-      rawChunks.forEach((block, idx) => {
-        chunkList.push({
-          id: `chk-${Date.now()}-${idx}`,
-          document_id: docId,
-          workspace_id: 'ws-demo',
-          chunk_index: idx,
-          page_number: Math.floor(idx / 2) + 1,
-          section_title: `Section ${idx + 1}`,
-          content: block.trim(),
-          token_count: Math.ceil(block.length / 4),
-          created_at: new Date().toISOString(),
-        });
-      });
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 422 });
     }
 
-    const newDoc: Document = {
-      id: docId,
-      workspace_id: 'ws-demo',
-      uploaded_by: 'usr-demo',
-      original_filename: filename,
-      storage_path: `/vault/docs/${filename}`,
-      mime_type: mimeType,
-      file_size_bytes: fileSize,
-      checksum: `sha256:${Math.random().toString(16).substring(2, 12)}`,
-      status: 'ready',
-      page_count: Math.max(1, Math.ceil(chunkList.length / 2)),
-      chunk_count: chunkList.length,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      document_index: docIndex,
-    };
-
-    store.addDocument(newDoc, chunkList);
+    const store = getStore();
+    const createdDoc = store.documents.find((d) => d.id === result.documentId);
 
     return NextResponse.json({
       success: true,
-      document: newDoc,
-      chunkCount: chunkList.length,
+      document: createdDoc,
+      chunkCount: result.chunkCount,
     });
-  } catch (error) {
-    console.error('Document upload error:', error);
+  } catch (error: any) {
+    console.error('Document upload API error:', error);
     return NextResponse.json(
-      { error: 'Failed to process and index document' },
+      { error: error.message || 'Failed to process document' },
       { status: 500 }
     );
   }
@@ -106,17 +71,19 @@ export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
+    const workspaceId = searchParams.get('workspaceId') || 'ws-demo';
 
     if (!id) {
       return NextResponse.json({ error: 'Missing document id' }, { status: 400 });
     }
 
-    const store = getStore();
-    store.deleteDocument(id);
+    const result = await deleteDocumentCascade(id, workspaceId);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true, id });
-  } catch (error) {
-    console.error('Delete error:', error);
-    return NextResponse.json({ error: 'Failed to delete document' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Delete failed' }, { status: 500 });
   }
 }

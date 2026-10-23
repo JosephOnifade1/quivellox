@@ -25,6 +25,8 @@ export interface Document {
   created_at: string;
   updated_at: string;
   document_index?: string; // e.g. DOC-001
+  dify_document_id?: string | null;
+  dify_batch_id?: string | null;
 }
 
 export interface DocumentChunk {
@@ -78,6 +80,7 @@ export interface Workspace {
   id: string;
   name: string;
   owner_id: string;
+  dify_dataset_id?: string | null;
   created_at: string;
   updated_at: string;
 }

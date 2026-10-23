@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   FileText,
   Upload,
@@ -244,9 +245,12 @@ export default function KnowledgePage() {
                         <span className="text-[10px] font-mono font-bold text-[var(--accent-citron-muted)]">
                           {doc.document_index || 'DOC'}
                         </span>
-                        <span className="text-xs font-semibold text-[var(--text-primary)] truncate">
+                        <Link
+                          href={`/app/knowledge/${doc.id}`}
+                          className="text-xs font-semibold text-[var(--text-primary)] truncate hover:text-[var(--accent-citron-muted)] hover:underline transition-colors"
+                        >
                           {doc.original_filename}
-                        </span>
+                        </Link>
                       </div>
                       <div className="text-[10px] font-mono text-[var(--text-muted)] flex items-center gap-2 mt-0.5">
                         <span>{(doc.file_size_bytes / 1024).toFixed(1)} KB</span>

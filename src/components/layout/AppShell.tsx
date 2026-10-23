@@ -28,7 +28,9 @@ export const AppShell: React.FC<AppShellProps> = ({
     <div className="flex h-screen w-screen overflow-hidden bg-[var(--bg-main)]">
       {/* Desktop Persistent Sidebar */}
       <div className="hidden md:flex h-full">
-        <Sidebar onAddDocumentClick={() => setUploadModalOpen(true)} />
+        <React.Suspense fallback={<div className="w-64 h-full bg-[var(--bg-surface)] border-r border-[var(--border-subtle)]" />}>
+          <Sidebar onAddDocumentClick={() => setUploadModalOpen(true)} />
+        </React.Suspense>
       </div>
 
       {/* Mobile Drawer Backdrop and Sidebar */}
@@ -46,13 +48,15 @@ export const AppShell: React.FC<AppShellProps> = ({
             >
               <X className="w-4 h-4" />
             </button>
-            <Sidebar
-              onAddDocumentClick={() => {
-                setMobileOpen(false);
-                setUploadModalOpen(true);
-              }}
-              onCloseMobile={() => setMobileOpen(false)}
-            />
+            <React.Suspense fallback={<div className="w-72 h-full bg-[var(--bg-surface)]" />}>
+              <Sidebar
+                onAddDocumentClick={() => {
+                  setMobileOpen(false);
+                  setUploadModalOpen(true);
+                }}
+                onCloseMobile={() => setMobileOpen(false)}
+              />
+            </React.Suspense>
           </div>
         </div>
       )}

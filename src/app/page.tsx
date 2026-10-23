@@ -1,175 +1,501 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import {
   ArrowRight,
   ShieldCheck,
-  FileText,
-  Search,
-  Layers,
-  Database,
-  ExternalLink,
-  BookOpen,
-  CheckCircle2,
   Lock,
-  Sparkles,
+  Search,
+  ExternalLink,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
   FileCode,
+  CheckCircle2,
+  Database,
   Terminal,
+  Menu,
+  X,
+  Layers,
+  Sparkles,
+  Shield,
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 
 export default function LandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors selection:bg-[var(--accent-citron)] selection:text-[var(--accent-citron-text)]">
-      {/* ─── 1. ARCHIVAL NAVIGATION BAR ─── */}
-      <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md border-b border-[var(--border-subtle)]">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo & Category */}
+    <div className="min-h-screen flex flex-col bg-[#F5F4EE] dark:bg-[#111814] text-[#151713] dark:text-[#F5F4EE] transition-colors selection:bg-[#D8F36A] selection:text-[#151713]">
+      {/* ─── 1. TOP NAVIGATION ─── */}
+      <header className="sticky top-0 z-50 bg-[#F5F4EE]/95 dark:bg-[#111814]/95 backdrop-blur-md border-b border-[#DADBD1]/60 dark:border-[#222C26]">
+        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+          {/* Brand Wordmark & Descriptor */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-center font-mono font-bold text-xs text-[var(--accent-citron-muted)] group-hover:border-[var(--accent-citron-muted)] transition-colors">
+            <div className="w-8 h-8 rounded-[7px] bg-[#151713] dark:bg-[#F5F4EE] text-[#F5F4EE] dark:text-[#151713] flex items-center justify-center font-heading font-black text-sm tracking-tighter">
               QV
             </div>
-            <div className="space-y-0.5">
-              <span className="font-heading font-bold text-base tracking-tight text-[var(--text-primary)] block leading-none">
+            <div className="flex items-baseline gap-2.5">
+              <span className="font-heading font-bold text-xl tracking-tight text-[#151713] dark:text-[#F5F4EE]">
                 Quellivox
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--text-muted)] block leading-none">
-                The Evidence Desk
+              <span className="hidden lg:inline text-xs text-[#6B7266] dark:text-[#8E9387]">
+                Private knowledge workspace
               </span>
             </div>
           </Link>
 
-          {/* Section Anchors */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-mono uppercase tracking-wider text-[var(--text-muted)]">
-            <a href="#workflow" className="hover:text-[var(--text-primary)] transition-colors">
-              Ingestion Workflow
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-9 text-sm text-[#5D6257] dark:text-[#A3A89D]">
+            <a href="#platform" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Platform
             </a>
-            <a href="#citations" className="hover:text-[var(--text-primary)] transition-colors">
-              Verifiable Citations
+            <a href="#evidence-chain" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              How it works
             </a>
-            <a href="#security" className="hover:text-[var(--text-primary)] transition-colors">
-              Vault Isolation
+            <a href="#security" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Security
             </a>
-            <Link href="/app" className="hover:text-[var(--text-primary)] transition-colors">
-              Workspace Desk
-            </Link>
+            <a href="#documentation" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Documentation
+            </a>
           </nav>
 
-          {/* Actions & Theme */}
-          <div className="flex items-center gap-3">
+          {/* Desktop Right CTAs */}
+          <div className="hidden sm:flex items-center gap-5">
             <ThemeToggle />
-            <Link href="/login">
-              <Button variant="ghost" size="sm">
-                Sign In
-              </Button>
+            <Link
+              href="/login"
+              className="text-sm font-medium text-[#151713] dark:text-[#F5F4EE] hover:text-[#5D6257] dark:hover:text-[#A3A89D] transition-colors px-1 py-1"
+            >
+              Sign in
             </Link>
-            <Link href="/signup">
-              <Button variant="citron" size="sm" icon={<ArrowRight className="w-3.5 h-3.5" />}>
-                Initialize Workspace
-              </Button>
+            <Link
+              href="/app"
+              className="inline-flex items-center gap-1.5 h-10 px-5 rounded-[6px] bg-[#D8F36A] text-[#151713] text-sm font-bold hover:bg-[#cbe65e] active:scale-95 transition-all shadow-xs"
+            >
+              <span>Open workspace</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex sm:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-[#151713] dark:text-[#F5F4EE]"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="sm:hidden px-6 py-4 border-b border-[#DADBD1] dark:border-[#222C26] bg-[#F5F4EE] dark:bg-[#111814] space-y-3 text-sm">
+            <a
+              href="#platform"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+            >
+              Platform
+            </a>
+            <a
+              href="#evidence-chain"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+            >
+              How it works
+            </a>
+            <a
+              href="#security"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+            >
+              Security
+            </a>
+            <a
+              href="#documentation"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+            >
+              Documentation
+            </a>
+            <div className="pt-2 flex flex-col gap-2">
+              <Link
+                href="/login"
+                className="text-center py-2.5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] text-sm font-semibold"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/app"
+                className="text-center py-2.5 rounded-[6px] bg-[#D8F36A] text-[#151713] text-sm font-bold"
+              >
+                Open workspace &rarr;
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* ─── 2. EDITORIAL HERO SECTION ─── */}
-      <section className="pt-16 md:pt-24 pb-16 px-6 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          {/* Left Column: Core Value Proposition */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-[var(--accent-citron-muted)] font-semibold">
-              Archival Knowledge Workstation
+      {/* ─── 2. HERO SECTION ─── */}
+      <section id="platform" className="pt-12 sm:pt-16 md:pt-20 pb-16 sm:pb-24 px-6 max-w-7xl mx-auto w-full">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-start">
+          {/* Left Column: Editorial Headline & Messaging */}
+          <div className="lg:col-span-5 space-y-6 pt-2">
+            {/* Monospace Eyebrow */}
+            <div className="font-mono text-[11px] uppercase tracking-wider font-semibold text-[#5D6257] dark:text-[#A3A89D]">
+              PRIVATE KNOWLEDGE / VERIFIED ANSWERS
             </div>
 
-            <h1 className="font-heading text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-[var(--text-primary)] leading-[1.1]">
-              Answers grounded in verified evidence.
+            {/* Main Headline */}
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE] leading-[1.08]">
+              Your documents. <br />
+              Understood. <br />
+              Every answer, traceable.
             </h1>
 
-            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-xl">
-              Quellivox is an editorial research workstation for rigorous document inquiry. Ingest internal manuals, policies, and technical specifications into an isolated vault, ask natural-language questions, and inspect the exact cited source passages that validate every answer.
+            {/* Supporting Copy */}
+            <p className="text-sm sm:text-base text-[#5D6257] dark:text-[#A3A89D] leading-relaxed max-w-md">
+              Ask questions across your private documents and get grounded answers with direct access to the exact passages and sources behind every claim. Quellivox connects your knowledge with trusted retrieval and verifiable evidence.
             </p>
 
+            {/* Primary & Secondary Actions */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link href="/signup">
-                <Button variant="citron" size="md" icon={<ArrowRight className="w-4 h-4" />}>
-                  Start Research Free
-                </Button>
+              <Link
+                href="/app"
+                className="inline-flex items-center gap-2 h-11 px-6 rounded-[6px] bg-[#151713] text-[#F5F4EE] dark:bg-[#F5F4EE] dark:text-[#151713] text-xs font-bold hover:bg-[#20231E] dark:hover:bg-[#ECEBE3] transition-colors shadow-xs"
+              >
+                <span>Explore the workspace</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
-              <Link href="/login">
-                <Button variant="secondary" size="md">
-                  Existing Workspace Sign In
-                </Button>
-              </Link>
+              <a
+                href="#evidence-chain"
+                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] bg-[#FFFEFA] dark:bg-[#1E231B] text-xs font-semibold text-[#151713] dark:text-[#F5F4EE] hover:bg-[#ECEBE3] dark:hover:bg-[#292D26] transition-colors"
+              >
+                How it works
+              </a>
             </div>
 
-            <div className="pt-2 flex items-center gap-4 text-[11px] font-mono text-[var(--text-muted)]">
-              <span>PDF · Markdown · TXT</span>
-              <span>·</span>
-              <span>Dify & pgvector RAG</span>
-              <span>·</span>
-              <span>Multi-Tenant Vault</span>
+            {/* Quiet Metadata Line */}
+            <div className="pt-2 flex items-center gap-2 text-xs font-mono text-[#8E9387] dark:text-[#6E7368]">
+              <Lock className="w-3.5 h-3.5" />
+              <span>Private by design · Source-linked answers</span>
             </div>
           </div>
 
-          {/* Right Column: Genuine Interactive Product Evidence Mockup */}
-          <div className="lg:col-span-6">
-            <div className="rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-lg overflow-hidden">
-              {/* Card Window Bar */}
-              <div className="px-4 py-2.5 border-b border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/60 flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[var(--border-strong)]" />
-                  <span>quellivox.internal / app / ask</span>
+          {/* Right Column: High-Fidelity Quellivox Workspace Mockup Centerpiece */}
+          <div className="lg:col-span-7">
+            <div className="rounded-[10px] border border-[#2E3B33] bg-[#18211D] text-[#F5F4EE] shadow-2xl overflow-hidden">
+              {/* Mockup App Header */}
+              <div className="px-4 py-2.5 border-b border-[#2E3B33] bg-[#131B17] flex items-center justify-between text-xs font-mono">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-[4px] bg-[#222C26] border border-[#2E3B33] flex items-center justify-center text-[10px] font-bold text-[#D8F36A]">
+                    QV
+                  </div>
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-[#222C26] border border-[#2E3B33] text-[11px] text-[#E1E5DE]">
+                    <span>Acme Corp Workspace</span>
+                    <ChevronDown className="w-3 h-3 text-[#8E9387]" />
+                  </div>
                 </div>
-                <span className="text-[10px] text-[var(--accent-citron-muted)] font-bold">
-                  EVIDENCE-GROUNDED
+
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded bg-[#111714] border border-[#2E3B33] text-[#8E9387] text-[11px] w-56">
+                  <Search className="w-3 h-3" />
+                  <span className="flex-1 truncate">Search documents…</span>
+                  <span className="text-[9px] px-1 rounded bg-[#222C26]">⌘K</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-[11px]">
+                  <div className="flex items-center gap-1.5 text-[#8E9387]">
+                    <span className="w-2 h-2 rounded-full bg-[#15803D]" />
+                    <span className="hidden sm:inline">Dify Connected</span>
+                  </div>
+                  <div className="w-6 h-6 rounded-full bg-[#222C26] border border-[#2E3B33] text-[10px] font-bold flex items-center justify-center text-[#E1E5DE]">
+                    JO
+                  </div>
+                </div>
+              </div>
+
+              {/* Mockup Workspace Body: 3-column Layout */}
+              <div className="grid grid-cols-12 min-h-[440px]">
+                {/* 1. Mini-Sidebar */}
+                <div className="col-span-2 hidden md:flex flex-col justify-between p-3 border-r border-[#2E3B33] bg-[#141C18] text-[11px] font-mono text-[#8E9387]">
+                  <div className="space-y-1">
+                    <div className="px-2 py-1.5 rounded text-[#8E9387]">Home</div>
+                    <div className="px-2 py-1.5 rounded bg-[#222C26] text-[#D8F36A] font-semibold flex items-center justify-between border-l-2 border-[#D8F36A]">
+                      <span>Ask</span>
+                    </div>
+                    <div className="px-2 py-1.5 rounded text-[#8E9387]">Knowledge</div>
+                    <div className="px-2 py-1.5 rounded text-[#8E9387]">Conversations</div>
+                    <div className="px-2 py-1.5 rounded text-[#8E9387]">Activity</div>
+                  </div>
+
+                  <div className="space-y-1 pt-4 border-t border-[#2E3B33] text-[10px]">
+                    <div className="px-2 py-1">Settings</div>
+                    <div className="px-2 py-1">Profile</div>
+                    <div className="px-2 py-1 text-[#E1E5DE] font-semibold truncate">
+                      Acme Corp &rarr;
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Central Conversation Area (Paper Card) */}
+                <div className="col-span-12 md:col-span-6 p-4 bg-[#FFFEFA] text-[#151713] space-y-3.5 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="text-xs font-heading font-bold text-[#151713]">
+                      Ask Quellivox
+                    </div>
+
+                    {/* Question Composer Box */}
+                    <div className="p-2.5 rounded-[6px] border border-[#DADBD1] bg-[#F5F4EE] flex items-center justify-between gap-2">
+                      <span className="text-xs text-[#151713] font-medium truncate">
+                        What is the incident escalation timeline?
+                      </span>
+                      <div className="w-6 h-6 rounded bg-[#151713] text-[#F5F4EE] flex items-center justify-center shrink-0">
+                        <ArrowRight className="w-3 h-3" />
+                      </div>
+                    </div>
+
+                    {/* Filter Pills */}
+                    <div className="flex items-center gap-1.5 flex-wrap text-[10px] font-mono text-[#5D6257]">
+                      <span className="px-2 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] flex items-center gap-1">
+                        All documents <ChevronDown className="w-2.5 h-2.5" />
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] flex items-center gap-1">
+                        Top-4 reranked <ChevronDown className="w-2.5 h-2.5" />
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-[#D8F36A]/20 border border-[#B7CE58]/50 text-[#151713] font-medium flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-[#15803D]" /> Zero hallucination filter
+                      </span>
+                    </div>
+
+                    {/* Synthesized Answer Card */}
+                    <div className="space-y-2 pt-1">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#5D6257] block font-semibold">
+                        Answer
+                      </span>
+                      <p className="text-xs text-[#151713] leading-relaxed">
+                        The incident <strong className="font-semibold">escalation timeline</strong> is defined in the security incident response policy. Initial detection and triage occurs <strong className="font-semibold">within 15 minutes</strong>, followed by escalation to the security team <strong className="font-semibold">within 1 hour</strong>. If the incident is critical, <strong className="font-semibold">senior leadership is notified within 4 hours</strong>.{' '}
+                        <span className="inline-flex items-center gap-1 font-mono text-[9px] font-bold">
+                          <span className="px-1 py-0.2 rounded bg-[#D8F36A] text-[#151713] border border-[#B7CE58]">[1]</span>
+                          <span className="px-1 py-0.2 rounded bg-[#D8F36A] text-[#151713] border border-[#B7CE58]">[2]</span>
+                        </span>
+                      </p>
+
+                      <div className="space-y-1 text-xs text-[#5D6257] pt-1">
+                        <div className="font-semibold text-[11px] text-[#151713]">Key points</div>
+                        <ul className="space-y-0.5 text-[11px] pl-3 list-disc">
+                          <li>Initial detection and triage: 0–15 minutes</li>
+                          <li>Escalation to security team: within 1 hour</li>
+                          <li>Senior leadership notification (critical): within 4 hours</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#DADBD1] flex items-center justify-between text-[10px] font-mono text-[#8E9387]">
+                    <span>2 sources · 3.4k tokens · 42s</span>
+                  </div>
+                </div>
+
+                {/* 3. Evidence Inspector Panel */}
+                <div className="col-span-12 md:col-span-4 p-3.5 bg-[#18211D] text-[11px] space-y-3 border-t md:border-t-0 md:border-l border-[#2E3B33]">
+                  {/* Inspector Tabs */}
+                  <div className="flex items-center justify-between border-b border-[#2E3B33] pb-2 text-[10px] font-mono uppercase tracking-wider text-[#8E9387]">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[#D8F36A] font-bold pb-1 border-b border-[#D8F36A]">Evidence 2</span>
+                      <span>Sources</span>
+                      <span>Details</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10px] font-mono text-[#8E9387]">
+                    <span>Source 1 of 2</span>
+                    <div className="flex items-center gap-1 text-[#E1E5DE]">
+                      <ChevronLeft className="w-3 h-3 cursor-pointer" />
+                      <ChevronRight className="w-3 h-3 cursor-pointer" />
+                    </div>
+                  </div>
+
+                  {/* Document Card */}
+                  <div className="p-2.5 rounded-[6px] bg-[#222C26] border border-[#2E3B33] space-y-2">
+                    <div className="flex items-start gap-2">
+                      <div className="w-4 h-4 rounded-[2px] bg-[#E11D48]/20 border border-[#E11D48]/40 text-[#FB7185] flex items-center justify-center shrink-0 mt-0.5 text-[8px] font-bold">
+                        PDF
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium text-[#F5F4EE] truncate text-xs">
+                          security-incident-response.pdf
+                        </div>
+                        <div className="flex items-center gap-1.5 font-mono text-[9px] text-[#8E9387] mt-0.5">
+                          <span className="px-1 rounded bg-[#18211D] border border-[#2E3B33] text-[#D8F36A]">
+                            DOC-001
+                          </span>
+                          <span className="px-1 rounded bg-[#18211D] border border-[#2E3B33] text-[#15803D]">
+                            READY
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] font-mono text-[#8E9387] pt-1 border-t border-[#2E3B33]">
+                      94.2% match · Page 12 · Chunk 4
+                    </div>
+
+                    {/* Verbatim Excerpt Quote */}
+                    <div className="p-2 rounded bg-[#18211D] border border-[#2E3B33] font-serif italic text-[11px] leading-relaxed text-[#E1E5DE]">
+                      &ldquo;The initial detection and triage must be completed{' '}
+                      <mark className="bg-[#D8F36A] text-[#151713] not-italic font-sans font-semibold px-0.5 rounded">
+                        within 15 minutes
+                      </mark>{' '}
+                      of alert identification. Escalation to the security team shall occur{' '}
+                      <mark className="bg-[#D8F36A] text-[#151713] not-italic font-sans font-semibold px-0.5 rounded">
+                        within 1 hour
+                      </mark>
+                      …&rdquo;
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10px] font-mono text-[#8E9387] pt-1">
+                    <span className="hover:text-[#F5F4EE] cursor-pointer flex items-center gap-1">
+                      View document &rarr;
+                    </span>
+                    <ExternalLink className="w-3 h-3 text-[#8E9387]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 3. THE EVIDENCE CHAIN SECTION (DARK FOREST CONTRAST) ─── */}
+      <section id="evidence-chain" className="py-20 md:py-24 px-6 bg-[#111814] text-[#F5F4EE] border-t border-[#222C26]">
+        <div className="max-w-7xl mx-auto space-y-12">
+          {/* Section Header */}
+          <div className="max-w-2xl space-y-3">
+            <div className="font-mono text-[11px] uppercase tracking-wider text-[#D8F36A] font-semibold">
+              THE EVIDENCE CHAIN
+            </div>
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F5F4EE] leading-tight">
+              Not just an answer. <br />
+              A path back to the source.
+            </h2>
+            <p className="text-sm sm:text-base text-[#A3A89D] leading-relaxed max-w-xl">
+              Every answer is grounded in your documents, with direct links to the exact passages used. No guesswork. No black boxes.
+            </p>
+          </div>
+
+          {/* 3 Connected Stages Composition with Connectors */}
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-3">
+            {/* Stage 1: Question */}
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#A3A89D]">
+                <span className="w-5 h-5 rounded-full border border-[#D8F36A] text-[#D8F36A] flex items-center justify-center font-bold text-[10px]">
+                  1
                 </span>
+                <span>Question</span>
               </div>
 
-              {/* Inquiry Prompt Sample */}
-              <div className="p-4 border-b border-[var(--border-subtle)] bg-[var(--bg-main)]/50 space-y-1">
-                <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-                  Research Question
+              <div className="p-4 rounded-[8px] border border-[#2E3B33] bg-[#18211D] space-y-3 shadow-md">
+                <div className="p-3 rounded-[6px] border border-[#2E3B33] bg-[#111814] flex items-center justify-between gap-2">
+                  <span className="text-xs text-[#F5F4EE] font-medium truncate">
+                    What is the incident escalation timeline?
+                  </span>
+                  <div className="w-5 h-5 rounded bg-[#D8F36A] text-[#151713] flex items-center justify-center shrink-0">
+                    <ArrowRight className="w-3 h-3" />
+                  </div>
                 </div>
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  &ldquo;What is the severity 1 incident response SLA and escalation timeline?&rdquo;
+
+                <div className="flex items-center gap-2 text-[10px] font-mono text-[#8E9387]">
+                  <span className="px-2 py-0.5 rounded bg-[#222C26] border border-[#2E3B33]">
+                    All documents &or;
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#222C26] border border-[#2E3B33]">
+                    Top-4 reranked &or;
+                  </span>
                 </div>
               </div>
+            </div>
 
-              {/* Grounded Answer Sample with Cited Excerpt */}
-              <div className="p-5 space-y-4">
-                <div className="space-y-2">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] flex items-center justify-between">
-                    <span>Synthesized Response</span>
-                    <span className="text-[var(--status-success)] flex items-center gap-1 font-semibold">
-                      <CheckCircle2 className="w-3 h-3" /> 2 Sources Cited
-                    </span>
+            {/* Desktop Connector Arrow 1 */}
+            <div className="hidden lg:flex items-center justify-center px-1 text-[#4A554D]">
+              <ArrowRight className="w-5 h-5 text-[#8E9387]" />
+            </div>
+
+            {/* Stage 2: Retrieved Passage (Light Paper Card) */}
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#A3A89D]">
+                <span className="w-5 h-5 rounded-full border border-[#D8F36A] text-[#D8F36A] flex items-center justify-center font-bold text-[10px]">
+                  2
+                </span>
+                <span>Retrieved Passage</span>
+              </div>
+
+              <div className="p-4 rounded-[8px] border border-[#DADBD1] bg-[#FFFEFA] text-[#151713] space-y-2.5 shadow-lg">
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <div className="w-3.5 h-3.5 rounded-[2px] bg-[#E11D48]/20 border border-[#E11D48]/40 text-[#E11D48] flex items-center justify-center shrink-0 text-[7px] font-bold">
+                      PDF
+                    </div>
+                    <span className="font-semibold truncate">security-incident-response.pdf</span>
                   </div>
-                  <p className="text-xs text-[var(--text-primary)] leading-relaxed">
-                    Severity 1 critical incidents require an initial operational response within{' '}
-                    <strong className="text-[var(--text-primary)] font-semibold">15 minutes</strong>{' '}
-                    and mandatory executive notification within 60 minutes. Escalation paths are automatically dispatched to the on-call engineering lead.
-                  </p>
+                  <span className="px-1.5 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] font-bold text-[#151713]">
+                    DOC-001
+                  </span>
                 </div>
 
-                {/* Quoted Verbatim Passage */}
-                <div className="p-3.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/40 space-y-1.5 font-serif italic text-xs border-l-2 border-l-[var(--accent-citron-muted)] text-[var(--text-primary)]">
-                  <div className="not-italic flex items-center justify-between text-[10px] font-mono text-[var(--text-muted)]">
-                    <span className="font-bold text-[var(--accent-citron-muted)]">
-                      EXCERPT · DOC-002: Service_Level_Agreement.pdf
-                    </span>
-                    <span>Page 8 · Section 3.2</span>
-                  </div>
-                  <p className="leading-relaxed">
-                    &ldquo;For all Severity 1 outages, the response team must acknowledge receipt within 15 minutes of trigger and establish an active command bridge…&rdquo;
-                  </p>
+                <div className="text-[10px] font-mono text-[#5D6257] flex items-center justify-between">
+                  <span>Page 12 · Chunk 4</span>
+                  <span className="text-[#15803D] font-bold">94.2% match</span>
                 </div>
 
-                <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-[var(--text-muted)]">
-                  <span>Cosine Similarity: 0.912</span>
-                  <span>512-Token HNSW Partition</span>
+                <div className="p-3 rounded-[6px] bg-[#F5F4EE] border border-[#DADBD1] font-serif italic text-xs leading-relaxed text-[#151713]">
+                  &ldquo;The initial detection and triage must be completed{' '}
+                  <mark className="bg-[#D8F36A] text-[#151713] not-italic font-sans font-semibold px-1 rounded">
+                    within 15 minutes
+                  </mark>{' '}
+                  of alert identification. Escalation to the security team shall occur{' '}
+                  <mark className="bg-[#D8F36A] text-[#151713] not-italic font-sans font-semibold px-1 rounded">
+                    within 1 hour
+                  </mark>
+                  …&rdquo;
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Connector Arrow 2 */}
+            <div className="hidden lg:flex items-center justify-center px-1 text-[#4A554D]">
+              <ArrowRight className="w-5 h-5 text-[#8E9387]" />
+            </div>
+
+            {/* Stage 3: Cited Answer */}
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#A3A89D]">
+                <span className="w-5 h-5 rounded-full border border-[#D8F36A] text-[#D8F36A] flex items-center justify-center font-bold text-[10px]">
+                  3
+                </span>
+                <span>Cited Answer</span>
+              </div>
+
+              <div className="p-4 rounded-[8px] border border-[#2E3B33] bg-[#18211D] space-y-3 shadow-md">
+                <p className="text-xs text-[#F5F4EE] leading-relaxed">
+                  The incident escalation timeline is defined in the security incident response policy. Initial detection and triage occurs within 15 minutes, followed by escalation to the security team within 1 hour. If the incident is critical, senior leadership is notified within 4 hours.{' '}
+                  <span className="inline-flex items-center gap-1 font-mono text-[9px] font-bold">
+                    <span className="px-1 rounded bg-[#D8F36A] text-[#151713]">[1]</span>
+                    <span className="px-1 rounded bg-[#D8F36A] text-[#151713]">[2]</span>
+                  </span>
+                </p>
+
+                <div className="pt-2 border-t border-[#2E3B33] flex items-center justify-between text-[10px] font-mono text-[#8E9387]">
+                  <span>2 sources</span>
+                  <span>3.4k tokens · 42s</span>
                 </div>
               </div>
             </div>
@@ -177,220 +503,146 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── 3. THE 4-STAGE INGESTION WORKFLOW ─── */}
-      <section id="workflow" className="py-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6">
-        <div className="max-w-7xl mx-auto space-y-10">
-          <div className="max-w-xl space-y-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--accent-citron-muted)] font-semibold">
-              Deterministic Architecture
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)] tracking-tight">
-              A transparent, auditable ingestion pipeline.
-            </h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-              Every document passes through a verifiable state machine ensuring tamper-resistant storage, disciplined chunking, and dual-layer vector indexing.
-            </p>
+      {/* ─── 4. SECURITY & VAULT ISOLATION SECTION ─── */}
+      <section id="security" className="py-20 md:py-24 px-6 max-w-7xl mx-auto w-full">
+        <div className="max-w-xl space-y-3 mb-12">
+          <div className="font-mono text-[11px] uppercase tracking-wider text-[#5D6257] dark:text-[#A3A89D] font-semibold">
+            CONTROLLED ARCHITECTURE
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <div className="text-[10px] font-mono text-[var(--accent-citron-muted)] font-bold">
-                STAGE 01
-              </div>
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Private Vault Storage
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Raw files are validated and stored in encrypted multi-tenant Supabase Storage with SHA-256 integrity checksums.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <div className="text-[10px] font-mono text-[var(--accent-citron-muted)] font-bold">
-                STAGE 02
-              </div>
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Layout & Text Parsing
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Structured text, metadata, page numbers, and section boundaries are extracted from PDF, Markdown, and TXT files.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <div className="text-[10px] font-mono text-[var(--accent-citron-muted)] font-bold">
-                STAGE 03
-              </div>
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Semantic Window Splitting
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Text is split into 512-token target passages with 64-token semantic overlaps to prevent boundary context clipping.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <div className="text-[10px] font-mono text-[var(--accent-citron-muted)] font-bold">
-                STAGE 04
-              </div>
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Vector Grounding & HNSW
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Embeddings are indexed in pgvector or Dify Knowledge Base partitions, ready for rapid cosine similarity retrieval.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 4. CITATIONS & VERIFIABILITY PROMISE ─── */}
-      <section id="citations" className="py-16 border-t border-[var(--border-subtle)] px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6 space-y-4">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--accent-citron-muted)] font-semibold">
-              Grounding Over Guesswork
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)] tracking-tight">
-              Inspect the evidence behind every sentence.
-            </h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-              Unlike generic LLM chat interfaces that hallucinate plausible answers, Quellivox links every claim directly to a cited source passage. If your indexed documents do not contain sufficient evidence to answer, the engine states it plainly rather than fabricating facts.
-            </p>
-
-            <div className="space-y-2.5 pt-2 text-xs font-mono text-[var(--text-muted)]">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--status-success)]" />
-                <span>Exact verbatim passage inspection in side drawer</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--status-success)]" />
-                <span>Page number and section title references</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[var(--status-success)]" />
-                <span>Explicit insufficient-evidence fallback handling</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6">
-            <div className="rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 space-y-3">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] flex items-center justify-between">
-                <span>Citation Verification Ledger</span>
-                <span>Active Vault Inspection</span>
-              </div>
-
-              <div className="space-y-2 text-xs font-mono">
-                <div className="p-3 rounded-[6px] bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold text-[var(--accent-citron-muted)]">DOC-001 · Architecture_Overview.pdf</span>
-                    <span>Similarity 0.94</span>
-                  </div>
-                  <p className="text-[11px] text-[var(--text-muted)] font-sans italic">
-                    &ldquo;Tenant data boundaries are strictly enforced via PostgreSQL Row-Level Security policies tied to verified session tokens.&rdquo;
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-[6px] bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold text-[var(--accent-citron-muted)]">DOC-004 · Security_Compliance.md</span>
-                    <span>Similarity 0.88</span>
-                  </div>
-                  <p className="text-[11px] text-[var(--text-muted)] font-sans italic">
-                    &ldquo;Under no circumstances are customer documents utilized to train foundational public model weights.&rdquo;
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 5. SECURITY & TENANT ISOLATION ─── */}
-      <section id="security" className="py-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] px-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="max-w-xl space-y-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--accent-citron-muted)] font-semibold">
-              Security Specifications
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)] tracking-tight">
-              Engineered for private enterprise research.
-            </h2>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-              Your research files remain private to your authenticated workspace partition.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <Lock className="w-5 h-5 text-[var(--accent-citron-muted)]" />
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Row-Level Security (RLS)
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Database queries and retrieval matches are enforced at the database layer via PostgreSQL RLS policies tied to verified session tokens.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <ShieldCheck className="w-5 h-5 text-[var(--accent-citron-muted)]" />
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                No Model Training
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Your uploaded documents and queries are processed solely in memory during generation. They are never retained for model retraining.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-main)] space-y-2">
-              <Database className="w-5 h-5 text-[var(--accent-citron-muted)]" />
-              <h3 className="text-sm font-heading font-bold text-[var(--text-primary)]">
-                Signed Vault Access
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Original files in Supabase Storage are private by default. Downloads require short-lived, authenticated cryptographic signatures.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 6. FINAL CALL TO ACTION ─── */}
-      <section className="py-20 border-t border-[var(--border-subtle)] px-6 text-center">
-        <div className="max-w-2xl mx-auto space-y-5">
-          <h2 className="text-3xl sm:text-4xl font-heading font-bold tracking-tight text-[var(--text-primary)]">
-            Begin your research in Quellivox.
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE]">
+            Private knowledge. <br />
+            Controlled access.
           </h2>
-          <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-lg mx-auto">
-            Initialize your private workspace, index your documents, and start asking grounded questions with verifiable citations in minutes.
+          <p className="text-xs sm:text-sm text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+            Document access, storage isolation, and vector retrieval are governed by Quellivox&rsquo;s verified multi-tenant authorization policies and database constraints.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Spec 1: Row-Level Security */}
+          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+              <Shield className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+              Row-Level Security (RLS)
+            </h3>
+            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+              Every document record, conversation session, and audit event is secured by PostgreSQL Row-Level Security policies tied directly to verified tenant tokens.
+            </p>
+          </div>
+
+          {/* Spec 2: Private Document Storage */}
+          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+              <Lock className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+              Private Vault Storage
+            </h3>
+            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+              Original research files reside in private Supabase Storage vaults. Downloads and previews require short-lived, authenticated cryptographic signatures.
+            </p>
+          </div>
+
+          {/* Spec 3: Grounded Retrieval */}
+          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+              <Database className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+              Evidence-Grounded Retrieval
+            </h3>
+            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+              Questions are synthesized only against retrieved passage chunks with similarity ranking. When evidence is missing, the system explicitly reports insufficient evidence.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 5. DOCUMENTATION ANCHOR / ARCHITECTURE OVERVIEW ─── */}
+      <section id="documentation" className="py-16 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#ECEBE3]/50 dark:bg-[#141C18]/50">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-[#5D6257] dark:text-[#A3A89D] font-bold">
+              TECHNICAL DOCUMENTATION & STACK
+            </div>
+            <h3 className="font-heading font-bold text-lg text-[#151713] dark:text-[#F5F4EE]">
+              Built on verified RAG fundamentals.
+            </h3>
+            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] max-w-lg leading-relaxed">
+              Dual-layer retrieval with Dify Knowledge Base dataset integration, local pgvector cosine similarity, 512-token chunk boundaries, and Supabase authentication.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/app"
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#151713] dark:bg-[#F5F4EE] text-[#F5F4EE] dark:text-[#151713] text-xs font-bold hover:bg-[#20231E] transition-colors"
+            >
+              <span>Launch Evidence Desk</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 6. CLOSING CTA SECTION ─── */}
+      <section className="py-20 md:py-24 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#FFFEFA] dark:bg-[#18211D] text-center">
+        <div className="max-w-2xl mx-auto space-y-5">
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE]">
+            Bring your knowledge into focus.
+          </h2>
+          <p className="text-xs sm:text-sm text-[#5D6257] dark:text-[#A3A89D] leading-relaxed max-w-lg mx-auto">
+            Initialize your private workspace, index your documents, and start asking grounded questions with verifiable source evidence.
           </p>
 
-          <div className="pt-2 flex items-center justify-center gap-3">
-            <Link href="/signup">
-              <Button variant="citron" size="md" icon={<ArrowRight className="w-4 h-4" />}>
-                Initialize Workspace
-              </Button>
+          <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/app"
+              className="inline-flex items-center gap-2 h-11 px-6 rounded-[6px] bg-[#D8F36A] text-[#151713] text-xs font-bold hover:bg-[#cbe65e] active:scale-95 transition-all shadow-xs"
+            >
+              <span>Open workspace</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-            <Link href="/login">
-              <Button variant="secondary" size="md">
-                Sign In to Existing Vault
-              </Button>
+
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] bg-[#FFFEFA] dark:bg-[#1E231B] text-xs font-semibold text-[#151713] dark:text-[#F5F4EE] hover:bg-[#ECEBE3] dark:hover:bg-[#292D26] transition-colors"
+            >
+              Sign in
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ─── 7. COMPACT ARCHIVAL FOOTER ─── */}
-      <footer className="py-8 px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-muted)]">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--text-primary)]">QUELLIVOX</span>
+      {/* ─── 7. ARCHIVAL FOOTER ─── */}
+      <footer className="py-10 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#F5F4EE] dark:bg-[#111814] text-xs font-mono text-[#5D6257] dark:text-[#8E9387]">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-[#151713] dark:text-[#F5F4EE] tracking-tight text-sm">
+              Quellivox
+            </span>
             <span>·</span>
             <span>The Evidence Desk</span>
           </div>
 
-          <div className="text-[11px]">
+          <div className="flex items-center gap-6 text-[11px] uppercase tracking-wider">
+            <a href="#platform" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Platform
+            </a>
+            <a href="#evidence-chain" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Evidence Chain
+            </a>
+            <a href="#security" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Security
+            </a>
+            <Link href="/login" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+              Sign in
+            </Link>
+          </div>
+
+          <div className="text-[11px] text-center sm:text-right">
             Grounded Retrieval-Augmented Generation Architecture
           </div>
         </div>

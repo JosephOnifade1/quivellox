@@ -15,7 +15,12 @@ import {
   Loader2,
   AlertCircle,
   Calendar,
+  Lock,
 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Badge } from '@/components/ui/Badge';
+import { formatArchivalDateTime, formatArchivalDate } from '@/components/knowledge/knowledge-utils';
 
 interface ProfileData {
   id: string;
@@ -30,7 +35,7 @@ interface ProfileData {
   createdAt: string;
 }
 
-export default function ProfilePage() {
+export default function ProfileSettingsPage() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -43,18 +48,18 @@ export default function ProfilePage() {
   const [signingOut, setSigningOut] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const fetchProfile = async () => {
     try {
       setLoading(true);
       const res = await fetch('/api/profile');
       if (!res.ok) {
-        throw new Error('Failed to load profile');
+        throw new Error('Failed to load profile record');
       }
       const data: ProfileData = await res.json();
       setProfile(data);
-      setDisplayName(data.displayName);
+      setDisplayName(data.displayName || '');
     } catch (err: unknown) {
       console.error(err);
       setErrorMessage('Could not load user profile. Please check your session.');
@@ -67,11 +72,10 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
-  const handleCopyId = () => {
-    if (!profile?.id) return;
-    navigator.clipboard.writeText(profile.id);
-    setCopiedId(true);
-    setTimeout(() => setCopiedId(false), 2000);
+  const handleCopyText = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(key);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -118,7 +122,9 @@ export default function ProfilePage() {
   };
 
   const handleSignOut = async () => {
-    if (!confirm('Are you sure you want to sign out?')) return;
+    const confirmed = window.confirm('Are you sure you want to sign out of Quellivox?');
+    if (!confirmed) return;
+
     setSigningOut(true);
     try {
       await fetch('/api/auth/signout', { method: 'POST' });
@@ -132,9 +138,9 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="p-8 max-w-2xl mx-auto flex items-center justify-center min-h-[400px] text-sm text-[var(--text-muted)]">
-        <Loader2 className="w-5 h-5 animate-spin mr-2 text-[var(--accent-citron-muted)]" />
-        Loading account details…
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-xs font-mono text-[var(--text-muted)] gap-3">
+        <Loader2 className="w-5 h-5 animate-spin text-[var(--accent-citron-muted)]" />
+        <span>Loading account identity…</span>
       </div>
     );
   }
@@ -147,144 +153,152 @@ export default function ProfilePage() {
     .toUpperCase();
 
   return (
-    <div className="p-6 md:p-8 max-w-3xl mx-auto space-y-6">
-      {/* Top Heading */}
-      <div className="flex items-center justify-between gap-4 pb-2 border-b border-[var(--border-subtle)]">
+    <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-6">
+      {/* 1. Header & Sign Out Action */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-            Profile & Account
-          </h1>
-          <p className="text-sm text-[var(--text-muted)] mt-0.5">
-            Manage your credentials, research identity, and workspace access.
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl md:text-2xl font-heading font-bold tracking-tight text-[var(--text-primary)]">
+              Profile & Account
+            </h1>
+            <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[4px] border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
+              Identity Settings
+            </span>
+          </div>
+          <p className="text-xs md:text-sm text-[var(--text-muted)] mt-1">
+            Manage your research identity, security credentials, and authorized workspace partition.
           </p>
         </div>
-        <button
+
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handleSignOut}
-          disabled={signingOut}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-[var(--status-error)]/30 text-[var(--status-error)] text-xs font-medium hover:bg-[var(--status-error-bg)] transition-colors disabled:opacity-50"
+          isLoading={signingOut}
+          icon={<LogOut className="w-3.5 h-3.5 text-[var(--status-error)]" />}
+          className="text-[var(--status-error)] hover:bg-[var(--status-error-bg)]"
         >
-          <LogOut className="w-3.5 h-3.5" />
-          {signingOut ? 'Signing out…' : 'Sign Out'}
-        </button>
+          Sign Out
+        </Button>
       </div>
 
+      {/* 2. Notification Banners */}
       {errorMessage && (
-        <div className="p-4 rounded-xl border border-[var(--status-error)]/40 bg-[var(--status-error-bg)] text-xs text-[var(--status-error)] flex items-center gap-3">
+        <div className="p-3.5 rounded-[6px] border border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-xs text-[var(--status-error)] flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {savedSuccess && (
-        <div className="p-4 rounded-xl border border-[var(--status-success)]/40 bg-[var(--status-success-bg)] text-xs text-[var(--status-success)] flex items-center gap-3">
+        <div className="p-3.5 rounded-[6px] border border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-xs text-[var(--status-success)] flex items-center gap-2.5">
           <Check className="w-4 h-4 shrink-0" />
-          <span>Profile changes saved successfully.</span>
+          <span>Profile updates persisted successfully.</span>
         </div>
       )}
 
-      {/* Profile Overview Card */}
-      <div className="p-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col sm:flex-row items-start sm:items-center gap-5 shadow-sm">
-        <div className="w-16 h-16 rounded-2xl bg-[var(--accent-citron)] text-[var(--accent-citron-text)] font-mono font-bold text-xl flex items-center justify-center shrink-0 shadow-sm">
+      {/* 3. Account Identity Banner */}
+      <div className="p-5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="w-14 h-14 rounded-[8px] bg-[var(--accent-citron)] text-[var(--accent-citron-text)] font-mono font-bold text-lg flex items-center justify-center shrink-0">
           {initials}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h2 className="text-lg font-bold text-[var(--text-primary)] truncate">
+
+        <div className="min-w-0 flex-1 space-y-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h2 className="text-base font-bold text-[var(--text-primary)] truncate">
               {profile?.displayName}
             </h2>
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold text-[var(--accent-citron-muted)] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]">
               <Shield className="w-3 h-3" /> {profile?.role}
             </span>
           </div>
-          <div className="text-xs text-[var(--text-muted)] font-mono mt-1 flex items-center gap-3 flex-wrap">
+          <div className="text-xs text-[var(--text-muted)] font-mono flex items-center gap-3 flex-wrap">
             <span>{profile?.email}</span>
             <span>·</span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" /> Joined{' '}
-              {profile?.createdAt
-                ? new Date(profile.createdAt).toLocaleDateString()
-                : 'Recently'}
-            </span>
+            <span>Account created {formatArchivalDate(profile?.createdAt)}</span>
           </div>
         </div>
       </div>
 
-      {/* Main Settings Form */}
-      <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-sm">
-        <form onSubmit={handleSaveProfile} className="p-6 space-y-6">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-muted)]">
-            Account & Identity Settings
-          </div>
+      {/* 4. Settings Form */}
+      <div className="rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden">
+        <form onSubmit={handleSaveProfile} className="p-5 md:p-6 space-y-6">
+          <div className="space-y-4">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block">
+              Personal Identity
+            </span>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-medium text-[var(--text-muted)] flex items-center gap-1.5 mb-1.5">
-                <User className="w-3.5 h-3.5" /> Full Display Name
-              </label>
-              <input
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your name"
-                required
-                className="w-full h-9 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-citron)] transition-colors"
-              />
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-medium text-[var(--text-muted)] block mb-1.5">
+                  Display Name
+                </label>
+                <input
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Researcher Name"
+                  required
+                  className="w-full h-9 px-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] transition-colors"
+                />
+              </div>
 
-            <div>
-              <label className="text-xs font-medium text-[var(--text-muted)] flex items-center gap-1.5 mb-1.5">
-                <Mail className="w-3.5 h-3.5" /> Email Address
-              </label>
-              <input
-                value={profile?.email || ''}
-                disabled
-                className="w-full h-9 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/60 text-sm text-[var(--text-muted)] cursor-not-allowed"
-              />
+              <div>
+                <label className="text-xs font-medium text-[var(--text-muted)] block mb-1.5">
+                  Primary Email (Read-Only)
+                </label>
+                <input
+                  value={profile?.email || ''}
+                  disabled
+                  className="w-full h-9 px-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)]/60 text-sm text-[var(--text-muted)] cursor-not-allowed font-mono text-xs"
+                />
+              </div>
             </div>
           </div>
 
           {/* Active Workspace Info */}
-          <div className="pt-4 border-t border-[var(--border-subtle)] space-y-3">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5" /> Active Workspace Boundary
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-              <div className="p-3 rounded-lg bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
+          <div className="pt-5 border-t border-[var(--border-subtle)] space-y-3">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block">
+              Active Workspace Boundary
+            </span>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+              <div className="p-3.5 rounded-[6px] bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
                 <span className="text-[10px] text-[var(--text-muted)] block">WORKSPACE NAME</span>
                 <span className="font-semibold text-[var(--text-primary)] text-sm">
                   {profile?.workspaceName}
                 </span>
               </div>
-              <div className="p-3 rounded-lg bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
-                <span className="text-[10px] text-[var(--text-muted)] block">WORKSPACE ID</span>
+
+              <div className="p-3.5 rounded-[6px] bg-[var(--bg-main)] border border-[var(--border-subtle)] space-y-1">
+                <span className="text-[10px] text-[var(--text-muted)] block">USER ID</span>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-[var(--text-primary)] truncate text-[11px]">
-                    {profile?.workspaceId}
+                  <span className="font-mono text-xs text-[var(--text-primary)] truncate">
+                    {profile?.id}
                   </span>
                   <button
                     type="button"
-                    onClick={handleCopyId}
-                    className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] transition-colors shrink-0"
-                    title="Copy Workspace ID"
+                    onClick={() => profile?.id && handleCopyText(profile.id, 'user_id')}
+                    className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                    title="Copy User ID"
                   >
-                    <Copy className="w-3.5 h-3.5" />
+                    {copiedId === 'user_id' ? (
+                      <Check className="w-3.5 h-3.5 text-[var(--status-success)]" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
                   </button>
                 </div>
               </div>
             </div>
-            {copiedId && (
-              <span className="text-[10px] text-[var(--status-success)] font-mono block">
-                Workspace ID copied to clipboard!
-              </span>
-            )}
           </div>
 
-          {/* Security & Password Change */}
-          <div className="pt-4 border-t border-[var(--border-subtle)] space-y-3">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-              <KeyRound className="w-3.5 h-3.5" /> Security & Password Update
-            </div>
+          {/* Security & Password Update */}
+          <div className="pt-5 border-t border-[var(--border-subtle)] space-y-3">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block">
+              Security Credentials
+            </span>
             <p className="text-xs text-[var(--text-muted)]">
-              Leave these fields blank if you do not wish to change your password.
+              Leave password fields empty to maintain your current credentials.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -297,20 +311,20 @@ export default function ProfilePage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="At least 8 characters"
-                  className="w-full h-9 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-citron)] transition-colors"
+                  className="w-full h-9 px-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] transition-colors"
                 />
               </div>
 
               <div>
                 <label className="text-xs font-medium text-[var(--text-muted)] block mb-1.5">
-                  Confirm New Password
+                  Confirm Password
                 </label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat new password"
-                  className="w-full h-9 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-citron)] transition-colors"
+                  className="w-full h-9 px-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] transition-colors"
                 />
               </div>
             </div>
@@ -319,20 +333,17 @@ export default function ProfilePage() {
           {/* Submit Actions */}
           <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between">
             <span className="text-[11px] font-mono text-[var(--text-muted)]">
-              Multi-tenant workspace isolation active
+              Multi-tenant vault encryption active
             </span>
-            <button
+            <Button
               type="submit"
-              disabled={saving}
-              className="inline-flex items-center gap-1.5 h-9 px-5 rounded-lg bg-[var(--accent-citron)] text-[var(--accent-citron-text)] text-xs font-semibold hover:bg-[var(--accent-citron-muted)] transition-colors shadow-sm disabled:opacity-50"
+              variant="citron"
+              size="sm"
+              isLoading={saving}
+              icon={<Save className="w-3.5 h-3.5" />}
             >
-              {saving ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Save className="w-3.5 h-3.5" />
-              )}
-              {saving ? 'Saving changes…' : 'Save Changes'}
-            </button>
+              Save Profile
+            </Button>
           </div>
         </form>
       </div>

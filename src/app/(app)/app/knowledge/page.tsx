@@ -100,7 +100,7 @@ export default function KnowledgePage() {
       {
         id: `chk-${doc.id}-1`,
         document_id: doc.id,
-        workspace_id: 'ws-demo',
+        workspace_id: doc.workspace_id || '',
         chunk_index: 0,
         page_number: 1,
         section_title: 'Document Body Extraction',

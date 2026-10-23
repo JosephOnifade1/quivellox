@@ -13,6 +13,7 @@ import {
   User,
   PlusCircle,
   FolderOpen,
+  LogOut,
 } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -179,6 +180,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </Link>
           );
         })}
+
+        <button
+          onClick={async () => {
+            try {
+              await fetch('/api/auth/signout', {
+                method: 'POST',
+                headers: { Accept: 'application/json' },
+              });
+            } catch (err) {
+              console.error('Sign out error', err);
+            } finally {
+              window.location.href = '/login';
+            }
+          }}
+          type="button"
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-[8px] text-xs font-medium text-[var(--status-error)]/80 hover:text-[var(--status-error)] hover:bg-[var(--status-error)]/10 transition-all border border-transparent mt-1"
+        >
+          <LogOut className="w-4 h-4 text-[var(--status-error)]/80" />
+          <span>Sign Out</span>
+        </button>
       </div>
 
       {/* Footer Info / Evidence Desk Version */}

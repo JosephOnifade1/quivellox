@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/supabase/server';
+import { requireAuthContext } from '@/server/authorization/authorization-service';
 import { getRAGProvider } from '@/server/rag/provider-factory';
 import { getStore } from '@/lib/rag-store';
 import { Message } from '@/types';
 
 export async function POST(req: NextRequest) {
+  // 1. Verify the session — reject unauthenticated callers immediately
+  const { user, errorResponse: authError } = await requireAuth();
+  if (authError) return authError;
+
+  // 2. Resolve workspace from the authenticated user — never from request body
+  const { ctx, errorResponse: ctxError } = await requireAuthContext(user.id);
+  if (ctxError) return ctxError;
+
   let body: any;
   try {
     body = await req.json();
@@ -13,25 +23,25 @@ export async function POST(req: NextRequest) {
 
   try {
     const question = body.question || body.query;
-    const conversationId = body.conversationId;
-    const workspaceId = body.workspaceId || 'ws-demo';
-    const userId = body.userId || 'usr-demo';
+    // conversationId may come from the client but is only used as a session
+    // key for in-memory chat history — it does not grant workspace access.
+    const conversationId = typeof body.conversationId === 'string' ? body.conversationId : undefined;
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return NextResponse.json({ error: 'Valid question parameter is required' }, { status: 400 });
     }
 
-    // 1. Delegate to active RAG Provider (Dify or Local)
+    // 3. Delegate to active RAG Provider using the verified workspace
     const provider = getRAGProvider();
     const result = await provider.answerQuestion({
-      workspaceId,
-      userId,
+      workspaceId: ctx.workspaceId,   // from DB, never from client
+      userId: ctx.userId,             // from session, never from client
       question,
       conversationId,
       topK: 4,
     });
 
-    // 2. Persist dialogue history in Quellivox system of record
+    // 4. Persist dialogue history in the in-memory store
     const store = getStore();
     const convId = conversationId || `conv-${Date.now()}`;
     let conv = store.conversations.find((c) => c.id === convId);
@@ -39,8 +49,8 @@ export async function POST(req: NextRequest) {
     if (!conv) {
       conv = {
         id: convId,
-        workspace_id: workspaceId,
-        user_id: userId,
+        workspace_id: ctx.workspaceId,
+        user_id: ctx.userId,
         title: question.slice(0, 48) + (question.length > 48 ? '…' : ''),
         last_message: result.answer.slice(0, 80) + '…',
         created_at: new Date().toISOString(),
@@ -70,9 +80,7 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    if (!store.messages[convId]) {
-      store.messages[convId] = [];
-    }
+    if (!store.messages[convId]) store.messages[convId] = [];
     store.messages[convId].push(userMsg, assistantMsg);
 
     return NextResponse.json({

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/Logo';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowRight, Building2, Lock, Mail, User, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getSupabaseConfigError } from '@/lib/supabase/client';
 
 function validatePassword(pw: string): string | null {
   if (pw.length < 8) return 'Password must be at least 8 characters.';
@@ -45,11 +45,13 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
-      const supabase = createClient();
-      if (!supabase) {
-        setError('Authentication service is not configured. Check your environment variables.');
+      const configError = getSupabaseConfigError();
+      if (configError) {
+        console.error('[Quellivox] Auth misconfiguration:', configError);
+        setError('Account creation is temporarily unavailable. Please try again later or contact support.');
         return;
       }
+      const supabase = createClient()!;
 
       const { error: authError } = await supabase.auth.signUp({
         email: trimmedEmail,

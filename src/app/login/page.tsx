@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Logo } from '@/components/ui/Logo';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowRight, Lock, Mail, AlertCircle, ShieldCheck, Loader2 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, getSupabaseConfigError } from '@/lib/supabase/client';
 
 function LoginForm() {
   const router = useRouter();
@@ -30,11 +30,13 @@ function LoginForm() {
 
     setLoading(true);
     try {
-      const supabase = createClient();
-      if (!supabase) {
-        setError('Authentication service is not configured. Check your environment variables.');
+      const configError = getSupabaseConfigError();
+      if (configError) {
+        console.error('[Quellivox] Auth misconfiguration:', configError);
+        setError('Sign-in is temporarily unavailable. Please try again later or contact support.');
         return;
       }
+      const supabase = createClient()!;
 
       const { error: authError } = await supabase.auth.signInWithPassword({
         email: trimmedEmail,

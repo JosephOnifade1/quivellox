@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { Logo } from '@/components/ui/Logo';
 import {
   ArrowRight,
   ShieldCheck,
@@ -34,17 +35,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
           {/* Brand Wordmark & Descriptor */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-[7px] bg-[#151713] dark:bg-[#F5F4EE] text-[#F5F4EE] dark:text-[#151713] flex items-center justify-center font-heading font-black text-sm tracking-tighter">
-              QV
-            </div>
-            <div className="flex items-baseline gap-2.5">
-              <span className="font-heading font-bold text-xl tracking-tight text-[#151713] dark:text-[#F5F4EE]">
-                Quellivox
-              </span>
-              <span className="hidden lg:inline text-xs text-[#6B7266] dark:text-[#8E9387]">
-                Private knowledge workspace
-              </span>
-            </div>
+            <Logo size="md" subtitle="Private knowledge workspace" />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -619,13 +610,7 @@ export default function LandingPage() {
       {/* ─── 7. ARCHIVAL FOOTER ─── */}
       <footer className="py-10 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#F5F4EE] dark:bg-[#111814] text-xs font-mono text-[#5D6257] dark:text-[#8E9387]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-[#151713] dark:text-[#F5F4EE] tracking-tight text-sm">
-              Quellivox
-            </span>
-            <span>·</span>
-            <span>The Evidence Desk</span>
-          </div>
+          <Logo size="sm" subtitle="The Evidence Desk" />
 
           <div className="flex items-center gap-6 text-[11px] uppercase tracking-wider">
             <a href="#platform" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">

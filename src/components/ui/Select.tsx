@@ -40,7 +40,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             ref={ref}
             disabled={disabled}
-            className={`w-full h-9 pl-3 pr-8 rounded-[6px] border bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] cursor-pointer ${
+            className={`w-full h-9 pl-3 pr-8 rounded-[6px] border bg-[var(--bg-input,var(--bg-surface))] text-sm text-[var(--text-primary)] transition-colors appearance-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] cursor-pointer ${
               mono ? 'font-mono text-xs' : ''
             } ${
               error

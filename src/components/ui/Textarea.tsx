@@ -39,7 +39,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           disabled={disabled}
           rows={rows}
-          className={`w-full p-2.5 rounded-[6px] border bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-faint)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] resize-y ${
+          className={`w-full p-2.5 rounded-[6px] border bg-[var(--bg-input,var(--bg-surface))] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-faint)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-[var(--border-strong)] focus:ring-1 focus:ring-[var(--accent-citron)] resize-y ${
             mono ? 'font-mono text-xs' : ''
           } ${
             error

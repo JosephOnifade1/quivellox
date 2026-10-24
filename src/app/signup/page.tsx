@@ -252,7 +252,7 @@ export default function SignupPage() {
                 id="signup-submit"
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 h-9 px-4 rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] text-sm font-medium transition-all shadow-xs mt-2 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
+                className="w-full flex items-center justify-center gap-2 h-9 px-4 rounded-[6px] bg-[#20221D] text-[#FAF8F1] hover:bg-[#2F322B] dark:bg-[#FAF8F1] dark:text-[#20221D] dark:hover:bg-[#EAE8DF] text-sm font-medium transition-all shadow-xs mt-2 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
               >
                 {loading ? (
                   <>

@@ -2,13 +2,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-desk-ink: #151713;
-  --color-desk-elevated: #20231E;
-  --color-desk-secondary: #292D26;
-  --color-desk-paper: #F5F4EE;
-  --color-desk-surface: #FFFEFA;
-  --color-desk-muted-surface: #ECEBE3;
-  --color-desk-hairline: #DADBD1;
+  --color-desk-ink: #20221D;
+  --color-desk-elevated: #FAF8F1;
+  --color-desk-secondary: #DDDAD0;
+  --color-desk-paper: #EAE8DF;
+  --color-desk-surface: #F4F1E8;
+  --color-desk-muted-surface: #DDDAD0;
+  --color-desk-hairline: #D2CFC4;
   --color-desk-citron: #D8F36A;
   --color-desk-citron-muted: #B7CE58;
 
@@ -20,27 +20,29 @@
 
 @layer base {
   :root {
-    /* Base Desk Palette Tokens (Literals) */
-    --desk-ink: #151713;
-    --desk-elevated: #20231E;
-    --desk-secondary: #292D26;
-    --desk-paper: #F5F4EE;
-    --desk-surface: #FFFEFA;
-    --desk-muted-surface: #ECEBE3;
-    --desk-hairline: #DADBD1;
+    /* Base Desk Palette Tokens (Warm Archival Ivory / Parchment) */
+    --desk-ink: #20221D;
+    --desk-elevated: #FAF8F1;
+    --desk-secondary: #DDDAD0;
+    --desk-paper: #EAE8DF;
+    --desk-surface: #F4F1E8;
+    --desk-muted-surface: #DDDAD0;
+    --desk-hairline: #D2CFC4;
     --desk-citron: #D8F36A;
     --desk-citron-muted: #B7CE58;
 
-    /* Semantic Mappings: Light Paper Desk */
-    --bg-main: #F5F4EE;
-    --bg-surface: #FFFEFA;
-    --bg-surface-elevated: #ECEBE3;
-    --border-subtle: #DADBD1;
-    --border-strong: #C4C6B7;
+    /* Semantic Mappings: Warm Archival Desk (Light) */
+    --bg-main: #EAE8DF;
+    --bg-surface: #F4F1E8;
+    --bg-surface-elevated: #FAF8F1;
+    --bg-surface-secondary: #DDDAD0;
+    --bg-input: #DDDAD0;
+    --border-subtle: #D2CFC4;
+    --border-strong: #BFBCB0;
 
-    --text-primary: #151713;
-    --text-muted: #5D6257;
-    --text-faint: #8E9387;
+    --text-primary: #20221D;
+    --text-muted: #64645A;
+    --text-faint: #77766B;
 
     --accent-citron: #D8F36A;
     --accent-citron-muted: #B7CE58;
@@ -48,35 +50,37 @@
     --focus-ring: #D8F36A;
 
     --status-success: #15803D;
-    --status-success-bg: #E8F5E9;
-    --status-success-border: #C8E6C9;
+    --status-success-bg: #E3EDE0;
+    --status-success-border: #BCD5B7;
 
-    --status-warning: #B45309;
-    --status-warning-bg: #FEF9C3;
-    --status-warning-border: #FDE047;
+    --status-warning: #9A4A0A;
+    --status-warning-bg: #F4EBD7;
+    --status-warning-border: #E4D0A5;
 
     --status-error: #B91C1C;
-    --status-error-bg: #FEE2E2;
-    --status-error-border: #FCA5A5;
+    --status-error-bg: #F5E1DF;
+    --status-error-border: #E8B9B7;
 
-    --status-info: #475569;
-    --status-info-bg: #F1F5F9;
-    --status-info-border: #CBD5E1;
+    --status-info: #4E595D;
+    --status-info-bg: #DCE3E5;
+    --status-info-border: #BCC7CB;
 
     /* Backward compatibility with legacy Geist tokens */
     --font-geist-sans: var(--font-body);
     --font-geist-mono: var(--font-mono);
 
-    /* Clean archival shadows */
-    --card-shadow: 0 1px 2px 0 rgba(21, 23, 19, 0.04);
-    --panel-shadow: 0 3px 8px -2px rgba(21, 23, 19, 0.06), 0 1px 2px -1px rgba(21, 23, 19, 0.04);
+    /* Clean restrained archival shadows */
+    --card-shadow: 0 1px 2px 0 rgba(32, 34, 29, 0.04);
+    --panel-shadow: 0 3px 8px -2px rgba(32, 34, 29, 0.06), 0 1px 2px -1px rgba(32, 34, 29, 0.03);
   }
 
   .dark {
-    /* Semantic Mappings: Dark Ink Desk */
+    /* Semantic Mappings: Dark Ink Desk — PRESERVED EXACTLY */
     --bg-main: #151713;
     --bg-surface: #20231E;
     --bg-surface-elevated: #292D26;
+    --bg-surface-secondary: #1B211A;
+    --bg-input: #18201B;
     --border-subtle: #343930;
     --border-strong: #495044;
 

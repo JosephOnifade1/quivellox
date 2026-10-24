@@ -3,32 +3,34 @@
    ========================================================================== */
 
 :root {
-  /* Light Paper Palette */
-  --bg-main: #F5F4EE;
-  --bg-surface: #FFFEFA;
-  --bg-surface-elevated: #ECEBE3;
-  --border-subtle: #DADBD1;
-  --border-strong: #C4C6B7;
+  /* Warm Archival Ivory / Parchment Palette */
+  --bg-main: #EAE8DF;
+  --bg-surface: #F4F1E8;
+  --bg-surface-elevated: #FAF8F1;
+  --bg-surface-secondary: #DDDAD0;
+  --bg-input: #DDDAD0;
+  --border-subtle: #D2CFC4;
+  --border-strong: #BFBCB0;
 
-  --text-primary: #24271F;
-  --text-muted: #707469;
-  --text-faint: #989C90;
+  --text-primary: #20221D;
+  --text-muted: #64645A;
+  --text-faint: #77766B;
 
   --accent-citron: #D8F36A;
   --accent-citron-muted: #B7CE58;
-  --accent-citron-text: #20231A;
+  --accent-citron-text: #151713;
 
   --status-success: #15803D;
-  --status-success-bg: #DCFCE7;
-  --status-warning: #B45309;
-  --status-warning-bg: #FEF3C7;
+  --status-success-bg: #E3EDE0;
+  --status-warning: #9A4A0A;
+  --status-warning-bg: #F4EBD7;
   --status-error: #B91C1C;
-  --status-error-bg: #FEE2E2;
-  --status-info: #475569;
-  --status-info-bg: #F1F5F9;
+  --status-error-bg: #F5E1DF;
+  --status-info: #4E595D;
+  --status-info-bg: #DCE3E5;
 
-  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  --panel-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 1px 2px 0 rgba(32, 34, 29, 0.04);
+  --panel-shadow: 0 3px 8px -2px rgba(32, 34, 29, 0.06), 0 1px 2px -1px rgba(32, 34, 29, 0.03);
 
   --font-heading: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

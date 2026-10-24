@@ -108,7 +108,7 @@ export const ResearchComposer: React.FC<ResearchComposerProps> = ({
               <button
                 type="submit"
                 disabled={!input.trim() || disabled}
-                className="h-8 px-3 rounded-[5px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] disabled:opacity-40 disabled:cursor-not-allowed font-medium text-xs flex items-center gap-1.5 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)] select-none"
+                className="h-8 px-3 rounded-[5px] bg-[#20221D] text-[#FAF8F1] hover:bg-[#2F322B] dark:bg-[#FAF8F1] dark:text-[#20221D] dark:hover:bg-[#EAE8DF] disabled:opacity-40 disabled:cursor-not-allowed font-medium text-xs flex items-center gap-1.5 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)] select-none"
                 title="Execute inquiry (Enter)"
               >
                 <span>Send</span>

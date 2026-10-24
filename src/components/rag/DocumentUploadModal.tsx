@@ -183,7 +183,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           <button
             onClick={handleUpload}
             disabled={!selectedFile || uploadState === 'uploading' || uploadState === 'success'}
-            className="h-9 px-5 text-sm font-medium rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
+            className="h-9 px-5 text-sm font-medium rounded-[6px] bg-[#20221D] text-[#FAF8F1] hover:bg-[#2F322B] dark:bg-[#FAF8F1] dark:text-[#20221D] dark:hover:bg-[#EAE8DF] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
           >
             {uploadState === 'uploading' && <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--accent-citron)]" />}
             {uploadState === 'success' && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--status-success)]" />}

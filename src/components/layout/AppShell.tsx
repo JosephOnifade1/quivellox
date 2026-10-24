@@ -116,7 +116,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             <div className="flex items-center gap-2 shrink-0">
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-1 h-6 px-2.5 rounded-[4px] bg-[#151713] text-[#F5F4EE] text-[11px] font-bold hover:bg-[#20231E] transition-colors"
+                className="inline-flex items-center gap-1 h-6 px-2.5 rounded-[4px] bg-[#20221D] text-[#FAF8F1] text-[11px] font-bold hover:bg-[#2F322B] transition-colors"
               >
                 Create workspace
                 <ArrowRight className="w-3 h-3" />

@@ -29,9 +29,9 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F4EE] dark:bg-[#111814] text-[#151713] dark:text-[#F5F4EE] transition-colors selection:bg-[#D8F36A] selection:text-[#151713]">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors selection:bg-[#D8F36A] selection:text-[#151713]">
       {/* ─── 1. TOP NAVIGATION ─── */}
-      <header className="sticky top-0 z-50 bg-[#F5F4EE]/95 dark:bg-[#111814]/95 backdrop-blur-md border-b border-[#DADBD1]/60 dark:border-[#222C26]">
+      <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 dark:bg-[#111814]/95 backdrop-blur-md border-b border-[var(--border-subtle)]/80 dark:border-[#222C26]">
         <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
           {/* Brand Wordmark & Descriptor */}
           <Link href="/" className="flex items-center gap-3 group">
@@ -39,17 +39,17 @@ export default function LandingPage() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-9 text-sm text-[#5D6257] dark:text-[#A3A89D]">
-            <a href="#platform" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+          <nav className="hidden md:flex items-center gap-9 text-sm text-[var(--text-muted)]">
+            <a href="#platform" className="hover:text-[var(--text-primary)] transition-colors">
               Platform
             </a>
-            <a href="#evidence-chain" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#evidence-chain" className="hover:text-[var(--text-primary)] transition-colors">
               How it works
             </a>
-            <a href="#security" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#security" className="hover:text-[var(--text-primary)] transition-colors">
               Security
             </a>
-            <a href="#documentation" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#documentation" className="hover:text-[var(--text-primary)] transition-colors">
               Documentation
             </a>
           </nav>
@@ -59,7 +59,7 @@ export default function LandingPage() {
             <ThemeToggle />
             <Link
               href="/login"
-              className="text-sm font-medium text-[#151713] dark:text-[#F5F4EE] hover:text-[#5D6257] dark:hover:text-[#A3A89D] transition-colors px-1 py-1"
+              className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--text-muted)] transition-colors px-1 py-1"
             >
               Sign in
             </Link>
@@ -87,39 +87,39 @@ export default function LandingPage() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="sm:hidden px-6 py-4 border-b border-[#DADBD1] dark:border-[#222C26] bg-[#F5F4EE] dark:bg-[#111814] space-y-3 text-sm">
+          <div className="sm:hidden px-6 py-4 border-b border-[var(--border-subtle)] dark:border-[#222C26] bg-[var(--bg-main)] dark:bg-[#111814] space-y-3 text-sm">
             <a
               href="#platform"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+              className="block py-1.5 text-[var(--text-muted)]"
             >
               Platform
             </a>
             <a
               href="#evidence-chain"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+              className="block py-1.5 text-[var(--text-muted)]"
             >
               How it works
             </a>
             <a
               href="#security"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+              className="block py-1.5 text-[var(--text-muted)]"
             >
               Security
             </a>
             <a
               href="#documentation"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-1.5 text-[#5D6257] dark:text-[#A3A89D]"
+              className="block py-1.5 text-[var(--text-muted)]"
             >
               Documentation
             </a>
             <div className="pt-2 flex flex-col gap-2">
               <Link
                 href="/login"
-                className="text-center py-2.5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] text-sm font-semibold"
+                className="text-center py-2.5 rounded-[6px] border border-[var(--border-subtle)] dark:border-[#343930] text-sm font-semibold text-[var(--text-primary)]"
               >
                 Sign in
               </Link>
@@ -140,19 +140,19 @@ export default function LandingPage() {
           {/* Left Column: Editorial Headline & Messaging */}
           <div className="lg:col-span-5 space-y-6 pt-2">
             {/* Monospace Eyebrow */}
-            <div className="font-mono text-[11px] uppercase tracking-wider font-semibold text-[#5D6257] dark:text-[#A3A89D]">
+            <div className="font-mono text-[11px] uppercase tracking-wider font-semibold text-[var(--text-muted)]">
               PRIVATE KNOWLEDGE / VERIFIED ANSWERS
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-heading text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE] leading-[1.08]">
+            <h1 className="font-heading text-4xl sm:text-5xl lg:text-[54px] font-bold tracking-tight text-[var(--text-primary)] leading-[1.08]">
               Your documents. <br />
               Understood. <br />
               Every answer, traceable.
             </h1>
 
             {/* Supporting Copy */}
-            <p className="text-sm sm:text-base text-[#5D6257] dark:text-[#A3A89D] leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-md">
               Ask questions across your private documents and get grounded answers with direct access to the exact passages and sources behind every claim. Quellivox connects your knowledge with trusted retrieval and verifiable evidence.
             </p>
 
@@ -160,7 +160,7 @@ export default function LandingPage() {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href="/app"
-                className="inline-flex items-center gap-2 h-11 px-6 rounded-[6px] bg-[#151713] text-[#F5F4EE] dark:bg-[#F5F4EE] dark:text-[#151713] text-xs font-bold hover:bg-[#20231E] dark:hover:bg-[#ECEBE3] transition-colors shadow-xs"
+                className="inline-flex items-center gap-2 h-11 px-6 rounded-[6px] bg-[#20221D] text-[#FAF8F1] dark:bg-[#FAF8F1] dark:text-[#20221D] text-xs font-bold hover:bg-[#2F322B] dark:hover:bg-[#EAE8DF] transition-colors shadow-xs"
               >
                 <span>Explore the workspace</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -168,14 +168,14 @@ export default function LandingPage() {
 
               <a
                 href="#evidence-chain"
-                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] bg-[#FFFEFA] dark:bg-[#1E231B] text-xs font-semibold text-[#151713] dark:text-[#F5F4EE] hover:bg-[#ECEBE3] dark:hover:bg-[#292D26] transition-colors"
+                className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[var(--border-subtle)] dark:border-[#343930] bg-[var(--bg-surface)] dark:bg-[#1E231B] text-xs font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] dark:hover:bg-[#292D26] transition-colors"
               >
                 How it works
               </a>
             </div>
 
             {/* Quiet Metadata Line */}
-            <div className="pt-2 flex items-center gap-2 text-xs font-mono text-[#8E9387] dark:text-[#6E7368]">
+            <div className="pt-2 flex items-center gap-2 text-xs font-mono text-[var(--text-faint)]">
               <Lock className="w-3.5 h-3.5" />
               <span>Private by design · Source-linked answers</span>
             </div>
@@ -236,42 +236,42 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* 2. Central Conversation Area (Paper Card) */}
-                <div className="col-span-12 md:col-span-6 p-4 bg-[#FFFEFA] text-[#151713] space-y-3.5 flex flex-col justify-between">
+                {/* 2. Central Conversation Area (Warm Archival Card) */}
+                <div className="col-span-12 md:col-span-6 p-4 bg-[var(--bg-surface)] text-[var(--text-primary)] space-y-3.5 flex flex-col justify-between">
                   <div className="space-y-3">
-                    <div className="text-xs font-heading font-bold text-[#151713]">
+                    <div className="text-xs font-heading font-bold text-[var(--text-primary)]">
                       Ask Quellivox
                     </div>
 
                     {/* Question Composer Box */}
-                    <div className="p-2.5 rounded-[6px] border border-[#DADBD1] bg-[#F5F4EE] flex items-center justify-between gap-2">
-                      <span className="text-xs text-[#151713] font-medium truncate">
+                    <div className="p-2.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-main)] flex items-center justify-between gap-2">
+                      <span className="text-xs text-[var(--text-primary)] font-medium truncate">
                         What is the incident escalation timeline?
                       </span>
-                      <div className="w-6 h-6 rounded bg-[#151713] text-[#F5F4EE] flex items-center justify-center shrink-0">
+                      <div className="w-6 h-6 rounded bg-[#20221D] text-[#FAF8F1] flex items-center justify-center shrink-0">
                         <ArrowRight className="w-3 h-3" />
                       </div>
                     </div>
 
                     {/* Filter Pills */}
-                    <div className="flex items-center gap-1.5 flex-wrap text-[10px] font-mono text-[#5D6257]">
-                      <span className="px-2 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] flex items-center gap-1">
+                    <div className="flex items-center gap-1.5 flex-wrap text-[10px] font-mono text-[var(--text-muted)]">
+                      <span className="px-2 py-0.5 rounded bg-[var(--bg-surface-secondary)] border border-[var(--border-subtle)] flex items-center gap-1">
                         All documents <ChevronDown className="w-2.5 h-2.5" />
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded bg-[var(--bg-surface-secondary)] border border-[var(--border-subtle)] flex items-center gap-1">
                         Top-4 reranked <ChevronDown className="w-2.5 h-2.5" />
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-[#D8F36A]/20 border border-[#B7CE58]/50 text-[#151713] font-medium flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded bg-[#D8F36A]/20 border border-[#B7CE58]/50 text-[var(--text-primary)] font-medium flex items-center gap-1">
                         <ShieldCheck className="w-3 h-3 text-[#15803D]" /> Zero hallucination filter
                       </span>
                     </div>
 
                     {/* Synthesized Answer Card */}
                     <div className="space-y-2 pt-1">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#5D6257] block font-semibold">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block font-semibold">
                         Answer
                       </span>
-                      <p className="text-xs text-[#151713] leading-relaxed">
+                      <p className="text-xs text-[var(--text-primary)] leading-relaxed">
                         The incident <strong className="font-semibold">escalation timeline</strong> is defined in the security incident response policy. Initial detection and triage occurs <strong className="font-semibold">within 15 minutes</strong>, followed by escalation to the security team <strong className="font-semibold">within 1 hour</strong>. If the incident is critical, <strong className="font-semibold">senior leadership is notified within 4 hours</strong>.{' '}
                         <span className="inline-flex items-center gap-1 font-mono text-[9px] font-bold">
                           <span className="px-1 py-0.2 rounded bg-[#D8F36A] text-[#151713] border border-[#B7CE58]">[1]</span>
@@ -279,8 +279,8 @@ export default function LandingPage() {
                         </span>
                       </p>
 
-                      <div className="space-y-1 text-xs text-[#5D6257] pt-1">
-                        <div className="font-semibold text-[11px] text-[#151713]">Key points</div>
+                      <div className="space-y-1 text-xs text-[var(--text-muted)] pt-1">
+                        <div className="font-semibold text-[11px] text-[var(--text-primary)]">Key points</div>
                         <ul className="space-y-0.5 text-[11px] pl-3 list-disc">
                           <li>Initial detection and triage: 0–15 minutes</li>
                           <li>Escalation to security team: within 1 hour</li>
@@ -290,7 +290,7 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#DADBD1] flex items-center justify-between text-[10px] font-mono text-[#8E9387]">
+                  <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[10px] font-mono text-[var(--text-faint)]">
                     <span>2 sources · 3.4k tokens · 42s</span>
                   </div>
                 </div>
@@ -420,7 +420,7 @@ export default function LandingPage() {
               <ArrowRight className="w-5 h-5 text-[#8E9387]" />
             </div>
 
-            {/* Stage 2: Retrieved Passage (Light Paper Card) */}
+            {/* Stage 2: Retrieved Passage (Elevated Paper Card) */}
             <div className="flex-1 space-y-3">
               <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-[#A3A89D]">
                 <span className="w-5 h-5 rounded-full border border-[#D8F36A] text-[#D8F36A] flex items-center justify-center font-bold text-[10px]">
@@ -429,7 +429,7 @@ export default function LandingPage() {
                 <span>Retrieved Passage</span>
               </div>
 
-              <div className="p-4 rounded-[8px] border border-[#DADBD1] bg-[#FFFEFA] text-[#151713] space-y-2.5 shadow-lg">
+              <div className="p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] space-y-2.5 shadow-sm">
                 <div className="flex items-center justify-between text-[10px] font-mono">
                   <div className="flex items-center gap-1.5 truncate">
                     <div className="w-3.5 h-3.5 rounded-[2px] bg-[#E11D48]/20 border border-[#E11D48]/40 text-[#E11D48] flex items-center justify-center shrink-0 text-[7px] font-bold">
@@ -437,17 +437,17 @@ export default function LandingPage() {
                     </div>
                     <span className="font-semibold truncate">security-incident-response.pdf</span>
                   </div>
-                  <span className="px-1.5 py-0.5 rounded bg-[#ECEBE3] border border-[#DADBD1] font-bold text-[#151713]">
+                  <span className="px-1.5 py-0.5 rounded bg-[var(--bg-surface-secondary)] border border-[var(--border-subtle)] font-bold text-[var(--text-primary)]">
                     DOC-001
                   </span>
                 </div>
 
-                <div className="text-[10px] font-mono text-[#5D6257] flex items-center justify-between">
+                <div className="text-[10px] font-mono text-[var(--text-muted)] flex items-center justify-between">
                   <span>Page 12 · Chunk 4</span>
-                  <span className="text-[#15803D] font-bold">94.2% match</span>
+                  <span className="text-[#15803D] dark:text-[#6ee7b7] font-bold">94.2% match</span>
                 </div>
 
-                <div className="p-3 rounded-[6px] bg-[#F5F4EE] border border-[#DADBD1] font-serif italic text-xs leading-relaxed text-[#151713]">
+                <div className="p-3 rounded-[6px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] font-serif italic text-xs leading-relaxed text-[var(--text-primary)]">
                   &ldquo;The initial detection and triage must be completed{' '}
                   <mark className="bg-[#D8F36A] text-[#151713] not-italic font-sans font-semibold px-1 rounded">
                     within 15 minutes
@@ -497,54 +497,54 @@ export default function LandingPage() {
       {/* ─── 4. SECURITY & VAULT ISOLATION SECTION ─── */}
       <section id="security" className="py-20 md:py-24 px-6 max-w-7xl mx-auto w-full">
         <div className="max-w-xl space-y-3 mb-12">
-          <div className="font-mono text-[11px] uppercase tracking-wider text-[#5D6257] dark:text-[#A3A89D] font-semibold">
+          <div className="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
             CONTROLLED ARCHITECTURE
           </div>
-          <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE]">
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-primary)]">
             Private knowledge. <br />
             Controlled access.
           </h2>
-          <p className="text-xs sm:text-sm text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+          <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
             Document access, storage isolation, and vector retrieval are governed by Quellivox&rsquo;s verified multi-tenant authorization policies and database constraints.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Spec 1: Row-Level Security */}
-          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
-            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+          <div className="p-6 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-primary)] dark:text-[#D8F36A]">
               <Shield className="w-4 h-4" />
             </div>
-            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+            <h3 className="font-heading font-bold text-base text-[var(--text-primary)]">
               Row-Level Security (RLS)
             </h3>
-            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
               Every document record, conversation session, and audit event is secured by PostgreSQL Row-Level Security policies tied directly to verified tenant tokens.
             </p>
           </div>
 
           {/* Spec 2: Private Document Storage */}
-          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
-            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+          <div className="p-6 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-primary)] dark:text-[#D8F36A]">
               <Lock className="w-4 h-4" />
             </div>
-            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+            <h3 className="font-heading font-bold text-base text-[var(--text-primary)]">
               Private Vault Storage
             </h3>
-            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
               Original research files reside in private Supabase Storage vaults. Downloads and previews require short-lived, authenticated cryptographic signatures.
             </p>
           </div>
 
           {/* Spec 3: Grounded Retrieval */}
-          <div className="p-6 rounded-[8px] border border-[#DADBD1] dark:border-[#2E3B33] bg-[#FFFEFA] dark:bg-[#18211D] space-y-3">
-            <div className="w-8 h-8 rounded-[6px] bg-[#F5F4EE] dark:bg-[#222C26] border border-[#DADBD1] dark:border-[#2E3B33] flex items-center justify-center text-[#151713] dark:text-[#D8F36A]">
+          <div className="p-6 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-3">
+            <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-primary)] dark:text-[#D8F36A]">
               <Database className="w-4 h-4" />
             </div>
-            <h3 className="font-heading font-bold text-base text-[#151713] dark:text-[#F5F4EE]">
+            <h3 className="font-heading font-bold text-base text-[var(--text-primary)]">
               Evidence-Grounded Retrieval
             </h3>
-            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] leading-relaxed">
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
               Questions are synthesized only against retrieved passage chunks with similarity ranking. When evidence is missing, the system explicitly reports insufficient evidence.
             </p>
           </div>
@@ -552,16 +552,16 @@ export default function LandingPage() {
       </section>
 
       {/* ─── 5. DOCUMENTATION ANCHOR / ARCHITECTURE OVERVIEW ─── */}
-      <section id="documentation" className="py-16 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#ECEBE3]/50 dark:bg-[#141C18]/50">
+      <section id="documentation" className="py-16 px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-surface-secondary)]/50">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-1">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-[#5D6257] dark:text-[#A3A89D] font-bold">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-bold">
               TECHNICAL DOCUMENTATION & STACK
             </div>
-            <h3 className="font-heading font-bold text-lg text-[#151713] dark:text-[#F5F4EE]">
+            <h3 className="font-heading font-bold text-lg text-[var(--text-primary)]">
               Built on verified RAG fundamentals.
             </h3>
-            <p className="text-xs text-[#5D6257] dark:text-[#A3A89D] max-w-lg leading-relaxed">
+            <p className="text-xs text-[var(--text-muted)] max-w-lg leading-relaxed">
               Dual-layer retrieval with Dify Knowledge Base dataset integration, local pgvector cosine similarity, 512-token chunk boundaries, and Supabase authentication.
             </p>
           </div>
@@ -569,7 +569,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/app"
-              className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#151713] dark:bg-[#F5F4EE] text-[#F5F4EE] dark:text-[#151713] text-xs font-bold hover:bg-[#20231E] transition-colors"
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#20221D] text-[#FAF8F1] dark:bg-[#FAF8F1] dark:text-[#20221D] text-xs font-bold hover:bg-[#2F322B] dark:hover:bg-[#EAE8DF] transition-colors"
             >
               <span>Launch Evidence Desk</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -579,12 +579,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── 6. CLOSING CTA SECTION ─── */}
-      <section className="py-20 md:py-24 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#FFFEFA] dark:bg-[#18211D] text-center">
+      <section className="py-20 md:py-24 px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] text-center">
         <div className="max-w-2xl mx-auto space-y-5">
-          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#151713] dark:text-[#F5F4EE]">
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)]">
             Bring your knowledge into focus.
           </h2>
-          <p className="text-xs sm:text-sm text-[#5D6257] dark:text-[#A3A89D] leading-relaxed max-w-lg mx-auto">
+          <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-lg mx-auto">
             Initialize your private workspace, index your documents, and start asking grounded questions with verifiable source evidence.
           </p>
 
@@ -599,7 +599,7 @@ export default function LandingPage() {
 
             <Link
               href="/login"
-              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[#DADBD1] dark:border-[#343930] bg-[#FFFEFA] dark:bg-[#1E231B] text-xs font-semibold text-[#151713] dark:text-[#F5F4EE] hover:bg-[#ECEBE3] dark:hover:bg-[#292D26] transition-colors"
+              className="inline-flex items-center justify-center h-11 px-5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-surface-elevated)] transition-colors"
             >
               Sign in
             </Link>
@@ -608,21 +608,21 @@ export default function LandingPage() {
       </section>
 
       {/* ─── 7. ARCHIVAL FOOTER ─── */}
-      <footer className="py-10 px-6 border-t border-[#DADBD1] dark:border-[#222C26] bg-[#F5F4EE] dark:bg-[#111814] text-xs font-mono text-[#5D6257] dark:text-[#8E9387]">
+      <footer className="py-10 px-6 border-t border-[var(--border-subtle)] bg-[var(--bg-main)] text-xs font-mono text-[var(--text-muted)]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <Logo size="sm" subtitle="The Evidence Desk" />
 
           <div className="flex items-center gap-6 text-[11px] uppercase tracking-wider">
-            <a href="#platform" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#platform" className="hover:text-[var(--text-primary)] transition-colors">
               Platform
             </a>
-            <a href="#evidence-chain" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#evidence-chain" className="hover:text-[var(--text-primary)] transition-colors">
               Evidence Chain
             </a>
-            <a href="#security" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <a href="#security" className="hover:text-[var(--text-primary)] transition-colors">
               Security
             </a>
-            <Link href="/login" className="hover:text-[#151713] dark:hover:text-[#F5F4EE] transition-colors">
+            <Link href="/login" className="hover:text-[var(--text-primary)] transition-colors">
               Sign in
             </Link>
           </div>

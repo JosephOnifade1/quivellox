@@ -121,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onAddDocumentClick}
           type="button"
-          className="w-full h-9 flex items-center justify-center gap-2 rounded-[6px] bg-[#151713] text-[#F5F4EE] hover:bg-[#20231E] dark:bg-[#F5F4EE] dark:text-[#151713] dark:hover:bg-[#ECEBE3] font-medium text-xs tracking-tight shadow-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
+          className="w-full h-9 flex items-center justify-center gap-2 rounded-[6px] bg-[#20221D] text-[#FAF8F1] hover:bg-[#2F322B] dark:bg-[#FAF8F1] dark:text-[#20221D] dark:hover:bg-[#EAE8DF] font-medium text-xs tracking-tight shadow-xs transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
         >
           <PlusCircle className="w-4 h-4 text-[var(--accent-citron)]" />
           <span>Add Documents</span>

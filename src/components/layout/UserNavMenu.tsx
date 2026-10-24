@@ -96,7 +96,7 @@ export const UserNavMenu: React.FC<{ className?: string }> = ({ className = '' }
         aria-haspopup="true"
         className="flex items-center gap-2 p-1 pl-1.5 rounded-[5px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-elevated)] hover:border-[var(--border-strong)] transition-all select-none shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-citron)]"
       >
-        <div className="w-6 h-6 rounded-[4px] bg-[#151713] dark:bg-[#F5F4EE] text-[#F5F4EE] dark:text-[#151713] text-[10px] font-mono font-semibold flex items-center justify-center shrink-0">
+        <div className="w-6 h-6 rounded-[4px] bg-[#20221D] dark:bg-[#FAF8F1] text-[#FAF8F1] dark:text-[#20221D] text-[10px] font-mono font-semibold flex items-center justify-center shrink-0">
           {initials}
         </div>
         <span className="text-xs font-medium text-[var(--text-primary)] hidden lg:inline max-w-[110px] truncate">

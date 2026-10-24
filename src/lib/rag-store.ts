@@ -1,4 +1,4 @@
-import { Document, DocumentChunk, Citation, Conversation, Message, ActivityEventType, Workspace } from '@/types';
+﻿import { Document, DocumentChunk, Citation, Conversation, Message, ActivityEventType, Workspace } from '@/types';
 
 // Pre-seeded demo documents for instant out-of-the-box portfolio evaluation
 export const INITIAL_DOCUMENTS: Document[] = [
@@ -6,8 +6,8 @@ export const INITIAL_DOCUMENTS: Document[] = [
     id: 'doc-001',
     workspace_id: 'ws-demo',
     uploaded_by: 'usr-lead-architect',
-    original_filename: 'Quellivox_System_Architecture_v2.4.pdf',
-    storage_path: '/vault/docs/Quellivox_System_Architecture_v2.4.pdf',
+    original_filename: 'Quivellox_System_Architecture_v2.4.pdf',
+    storage_path: '/vault/docs/Quivellox_System_Architecture_v2.4.pdf',
     mime_type: 'application/pdf',
     file_size_bytes: 1420500,
     checksum: 'sha256:8f4b23c10a',
@@ -77,7 +77,7 @@ export const INITIAL_CHUNKS: DocumentChunk[] = [
     chunk_index: 0,
     page_number: 2,
     section_title: 'Chunking Strategy & Semantic Boundary Preservation',
-    content: 'Quellivox utilizes recursive character splitting with a target window of 512 tokens and an overlap of 64 tokens. Boundary heuristics prioritize Markdown headers, paragraph breaks, and sentence delimiters to preserve semantic cohesion across chunk boundaries.',
+    content: 'Quivellox utilizes recursive character splitting with a target window of 512 tokens and an overlap of 64 tokens. Boundary heuristics prioritize Markdown headers, paragraph breaks, and sentence delimiters to preserve semantic cohesion across chunk boundaries.',
     token_count: 85,
     created_at: new Date().toISOString(),
   },
@@ -112,7 +112,7 @@ export const INITIAL_CHUNKS: DocumentChunk[] = [
     chunk_index: 0,
     page_number: 1,
     section_title: 'Service Availability Commitment',
-    content: 'The Quellivox Enterprise Service guarantees a monthly uptime percentage of at least 99.95% excluding scheduled maintenance windows announced at least 72 hours in advance. Downtime is measured from automated health check probes evaluated every 30 seconds.',
+    content: 'The Quivellox Enterprise Service guarantees a monthly uptime percentage of at least 99.95% excluding scheduled maintenance windows announced at least 72 hours in advance. Downtime is measured from automated health check probes evaluated every 30 seconds.',
     token_count: 78,
     created_at: new Date().toISOString(),
   },
@@ -182,7 +182,7 @@ export const INITIAL_CHUNKS: DocumentChunk[] = [
     chunk_index: 1,
     page_number: 4,
     section_title: 'Zero Training Policy on Customer Data',
-    content: 'Quellivox contractual agreements strictly prohibit using customer-uploaded documents, vector embeddings, or user prompts to fine-tune or train any foundation AI models. Data residency is locked to the selected enterprise region.',
+    content: 'Quivellox contractual agreements strictly prohibit using customer-uploaded documents, vector embeddings, or user prompts to fine-tune or train any foundation AI models. Data residency is locked to the selected enterprise region.',
     token_count: 76,
     created_at: new Date().toISOString(),
   },
@@ -218,7 +218,7 @@ export const INITIAL_ACTIVITY: ActivityEvent[] = [
   {
     id: 'act-004',
     type: 'document.ready',
-    description: 'Indexed Quellivox_System_Architecture_v2.4.pdf (6 chunks, 14 pages)',
+    description: 'Indexed Quivellox_System_Architecture_v2.4.pdf (6 chunks, 14 pages)',
     timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
 ];
@@ -334,12 +334,12 @@ class GlobalStore {
 // Global singleton across hot-reloads in Node / Next dev
 declare global {
   // eslint-disable-next-line no-var
-  var __quellivoxStore: GlobalStore | undefined;
+  var __quivelloxStore: GlobalStore | undefined;
 }
 
 export const getStore = (): GlobalStore => {
-  if (!global.__quellivoxStore) {
-    global.__quellivoxStore = new GlobalStore();
+  if (!global.__quivelloxStore) {
+    global.__quivelloxStore = new GlobalStore();
   }
-  return global.__quellivoxStore;
+  return global.__quivelloxStore;
 };

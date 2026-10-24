@@ -1,4 +1,4 @@
-import { RetrievedPassage } from '../retrieval/retriever';
+﻿import { RetrievedPassage } from '../retrieval/retriever';
 
 export interface PromptContext {
   systemPrompt: string;
@@ -24,7 +24,7 @@ export function buildPromptContext(
 ): PromptContext {
   const sourceManifest: PromptContext['sourceManifest'] = [];
 
-  const systemPrompt = `You are Quellivox, an evidence-grounded AI knowledge assistant.
+  const systemPrompt = `You are Quivellox, an evidence-grounded AI knowledge assistant.
 CRITICAL INSTRUCTIONS:
 1. Answer the user's question using ONLY the retrieved source passages provided below.
 2. If the passages do not contain enough evidence to answer, explicitly state: "The indexed documents do not contain sufficient evidence to answer this question."

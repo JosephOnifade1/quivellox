@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -153,7 +153,7 @@ export default function LandingPage() {
 
             {/* Supporting Copy */}
             <p className="text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-md">
-              Ask questions across your private documents and get grounded answers with direct access to the exact passages and sources behind every claim. Quellivox connects your knowledge with trusted retrieval and verifiable evidence.
+              Ask questions across your private documents and get grounded answers with direct access to the exact passages and sources behind every claim. Quivellox connects your knowledge with trusted retrieval and verifiable evidence.
             </p>
 
             {/* Primary & Secondary Actions */}
@@ -181,7 +181,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Right Column: High-Fidelity Quellivox Workspace Mockup Centerpiece */}
+          {/* Right Column: High-Fidelity Quivellox Workspace Mockup Centerpiece */}
           <div className="lg:col-span-7">
             <div className="rounded-[10px] border border-[#2E3B33] bg-[#18211D] text-[#F5F4EE] shadow-2xl overflow-hidden">
               {/* Mockup App Header */}
@@ -240,7 +240,7 @@ export default function LandingPage() {
                 <div className="col-span-12 md:col-span-6 p-4 bg-[var(--bg-surface)] text-[var(--text-primary)] space-y-3.5 flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="text-xs font-heading font-bold text-[var(--text-primary)]">
-                      Ask Quellivox
+                      Ask Quivellox
                     </div>
 
                     {/* Question Composer Box */}
@@ -505,7 +505,7 @@ export default function LandingPage() {
             Controlled access.
           </h2>
           <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-            Document access, storage isolation, and vector retrieval are governed by Quellivox&rsquo;s verified multi-tenant authorization policies and database constraints.
+            Document access, storage isolation, and vector retrieval are governed by Quivellox&rsquo;s verified multi-tenant authorization policies and database constraints.
           </p>
         </div>
 

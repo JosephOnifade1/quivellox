@@ -1,4 +1,4 @@
-# Quellivox — The Evidence Desk
+﻿# Quivellox — The Evidence Desk
 
 > **"Answers grounded in evidence."**  
 > An enterprise-grade, evidence-first AI knowledge assistant combining semantic retrieval, pgvector cosine search, and strict citation validation.
@@ -7,7 +7,7 @@
 
 ## 1. Product Overview
 
-Quellivox turns unorganized documents (PDF, Markdown, TXT) into a high-precision, searchable knowledge workspace. Rather than asking a general-purpose chatbot that hallucinates or references phantom documentation, Quellivox guarantees:
+Quivellox turns unorganized documents (PDF, Markdown, TXT) into a high-precision, searchable knowledge workspace. Rather than asking a general-purpose chatbot that hallucinates or references phantom documentation, Quivellox guarantees:
 
 - **Verified Citations**: Every generated answer contains interactive numbered markers (`[1]`, `[2]`) linked to the exact underlying text passage, document title, and page number.
 - **Evidence Inspector**: A side-by-side inspection drawer that reveals verbatim source excerpts and similarity scores without disrupting the reading flow.
@@ -39,7 +39,7 @@ quivellox/
 │   │   ├── (app)/          # Authenticated workspace route group
 │   │   │   └── app/
 │   │   │       ├── page.tsx                  # Workspace overview dashboard
-│   │   │       ├── ask/page.tsx              # Ask Quellivox (RAG conversation interface)
+│   │   │       ├── ask/page.tsx              # Ask Quivellox (RAG conversation interface)
 │   │   │       ├── knowledge/page.tsx        # Knowledge library & upload dropzone
 │   │   │       ├── knowledge/[documentId]/   # Deep document detail & raw chunk inspector
 │   │   │       ├── conversations/page.tsx    # Persisted research sessions
@@ -94,7 +94,7 @@ Copy `.env.example` to `.env.local`:
 ```bash
 cp .env.example .env.local
 ```
-> **Note**: Quellivox includes a **zero-friction local development engine**. If Supabase or OpenAI credentials are not yet configured in `.env.local`, the application automatically runs in local deterministic mode with 4 pre-seeded documents (`DOC-001` through `DOC-004`) so you can test RAG retrieval, citations, and uploads immediately on localhost!
+> **Note**: Quivellox includes a **zero-friction local development engine**. If Supabase or OpenAI credentials are not yet configured in `.env.local`, the application automatically runs in local deterministic mode with 4 pre-seeded documents (`DOC-001` through `DOC-004`) so you can test RAG retrieval, citations, and uploads immediately on localhost!
 
 ### Step 3: Run the Development Server
 ```bash
@@ -129,7 +129,7 @@ To deploy to a live Supabase project:
 2. Apply the migration file:
    ```bash
    npx supabase db push
-   # Or execute the SQL in supabase/migrations/20250101000000_quellivox_core_schema.sql
+   # Or execute the SQL in supabase/migrations/20250101000000_quivellox_core_schema.sql
    ```
 3. Set your production environment variables in Vercel or your hosting environment:
    - `NEXT_PUBLIC_SUPABASE_URL`
@@ -144,13 +144,13 @@ To deploy to a live Supabase project:
 1. **Landing Page (`/`)**: Verify editorial design, layered desktop software preview, 4-column feature grid, 3-step workflow, and dark forest testimonial banner.
 2. **One-Click Demo (`/login`)**: Click *"Enter as Lead Engineer (1-Click)"* to immediately access the authenticated workspace.
 3. **Workspace Dashboard (`/app`)**: View live metrics (4 documents, 20 chunks, 39 pages), hybrid search status, and the ingestion audit ledger.
-4. **Ask Quellivox (`/app/ask`)**:
+4. **Ask Quivellox (`/app/ask`)**:
    - Ask: *"What is the refund window and does it apply to digital products?"*
    - Verify answer references `[1]` and `[2]`.
    - Click citation badge `1` to open the **Evidence Inspector** panel showing the verbatim excerpt from `DOC-003` (Page 2) with an 82.4% similarity match.
 5. **Knowledge Library (`/app/knowledge`)**:
    - View document rows with status badges (`Ready`).
-   - Click on `Quellivox_System_Architecture_v2.4.pdf` to navigate to the **Document Detail Page** (`/app/knowledge/doc-001`) and inspect individual extracted chunks and token counts.
+   - Click on `Quivellox_System_Architecture_v2.4.pdf` to navigate to the **Document Detail Page** (`/app/knowledge/doc-001`) and inspect individual extracted chunks and token counts.
    - Drag and drop or browse a `.txt` or `.md` file to test live ingestion and chunking.
 6. **Conversations (`/app/conversations`)**: Review past research dialogues with preserved citations.
 7. **Audit Ledger (`/app/activity`)**: View chronological audit trail of document ingestion and executed queries.

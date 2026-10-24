@@ -1,5 +1,5 @@
--- =============================================================================
--- QUELLIVOX DATABASE MIGRATION: STORAGE BUCKET & ACTIVITY INSERT POLICIES
+﻿-- =============================================================================
+-- QUIVELLOX DATABASE MIGRATION: STORAGE BUCKET & ACTIVITY INSERT POLICIES
 -- Ensures private vault storage configuration and activity logging permissions
 -- =============================================================================
 

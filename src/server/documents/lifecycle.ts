@@ -1,7 +1,7 @@
-import { DocumentStatus } from '@/types';
+﻿import { DocumentStatus } from '@/types';
 
 /**
- * Valid state transitions for the Quellivox document lifecycle.
+ * Valid state transitions for the Quivellox document lifecycle.
  * Prevents invalid state jumps (e.g. ready cannot transition back to queued; failed cannot become ready without re-indexing).
  */
 export const VALID_STATUS_TRANSITIONS: Record<DocumentStatus, readonly DocumentStatus[]> = {

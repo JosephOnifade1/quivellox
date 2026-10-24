@@ -1,5 +1,5 @@
--- =============================================================================
--- QUELLIVOX DATABASE MIGRATION: DIFY RESOURCE MAPPINGS
+﻿-- =============================================================================
+-- QUIVELLOX DATABASE MIGRATION: DIFY RESOURCE MAPPINGS
 -- Extends core workspaces and documents with verified Dify identifiers
 -- =============================================================================
 
@@ -15,7 +15,7 @@ ALTER TABLE public.documents
 ADD COLUMN IF NOT EXISTS dify_document_id TEXT,
 ADD COLUMN IF NOT EXISTS dify_batch_id TEXT;
 
--- Index for resolving Dify document callbacks and citations back to Quellivox documents
+-- Index for resolving Dify document callbacks and citations back to Quivellox documents
 CREATE INDEX IF NOT EXISTS idx_documents_dify_document ON public.documents(dify_document_id);
 CREATE INDEX IF NOT EXISTS idx_documents_dify_batch ON public.documents(dify_batch_id);
 

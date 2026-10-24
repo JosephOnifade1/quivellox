@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
@@ -9,7 +9,7 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className = '' }
 
   useEffect(() => {
     setMounted(true);
-    const storedTheme = localStorage.getItem('quellivox_theme') as 'light' | 'dark' | null;
+    const storedTheme = localStorage.getItem('quivellox_theme') as 'light' | 'dark' | null;
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
 
@@ -24,7 +24,7 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className = '' }
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    localStorage.setItem('quellivox_theme', nextTheme);
+    localStorage.setItem('quivellox_theme', nextTheme);
 
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark');

@@ -1,5 +1,5 @@
--- =============================================================================
--- QUELLIVOX MASTER DATABASE SCHEMA & MIGRATIONS
+﻿-- =============================================================================
+-- QUIVELLOX MASTER DATABASE SCHEMA & MIGRATIONS
 -- Comprehensive Multi-Tenant RAG Schema with pgvector, RLS, and Audit Logging
 -- =============================================================================
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -56,7 +56,7 @@ export const CommandMenu: React.FC<{
     },
     {
       id: 'nav-ask',
-      title: 'Ask Quellivox',
+      title: 'Ask Quivellox',
       category: 'Navigation',
       href: '/app/ask',
       icon: <Sparkles className="w-4 h-4 text-[var(--accent-citron-muted)]" />,

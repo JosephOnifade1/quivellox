@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ function LoginForm() {
     try {
       const configError = getSupabaseConfigError();
       if (configError) {
-        console.error('[Quellivox] Auth misconfiguration:', configError);
+        console.error('[Quivellox] Auth misconfiguration:', configError);
         setError('Sign-in is temporarily unavailable. Please try again later or contact support.');
         return;
       }
@@ -89,7 +89,7 @@ function LoginForm() {
               AUTHENTICATED KNOWLEDGE VAULT
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-              Sign in to Quellivox
+              Sign in to Quivellox
             </h1>
             <p className="text-sm text-[var(--text-muted)]">
               Access your workspace documents, vector indices, and research conversations.

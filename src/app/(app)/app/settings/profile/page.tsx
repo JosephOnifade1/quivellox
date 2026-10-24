@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -122,7 +122,7 @@ export default function ProfileSettingsPage() {
   };
 
   const handleSignOut = async () => {
-    const confirmed = window.confirm('Are you sure you want to sign out of Quellivox?');
+    const confirmed = window.confirm('Are you sure you want to sign out of Quivellox?');
     if (!confirmed) return;
 
     setSigningOut(true);

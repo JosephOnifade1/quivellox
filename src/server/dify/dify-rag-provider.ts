@@ -1,4 +1,4 @@
-import {
+﻿import {
   IRAGProvider,
   IngestDocumentParams,
   IngestDocumentResult,
@@ -22,7 +22,7 @@ export class DifyRAGProvider implements IRAGProvider {
   }
 
   /**
-   * Resolves the Dify Dataset ID securely bound to the authorized Quellivox workspace.
+   * Resolves the Dify Dataset ID securely bound to the authorized Quivellox workspace.
    * Enforces server-side boundary: clients can NEVER submit arbitrary dataset IDs.
    */
   private resolveDatasetId(workspaceId: string): string {
@@ -150,12 +150,12 @@ export class DifyRAGProvider implements IRAGProvider {
       };
     }
 
-    // 3. Map and verify segments strictly against ready Quellivox workspace documents
+    // 3. Map and verify segments strictly against ready Quivellox workspace documents
     const retrievedChunks: DocumentChunk[] = [];
     const validCandidateCitations: Citation[] = [];
 
     for (const seg of difySegments) {
-      // Find trusted Quellivox document by dify_document_id or filename
+      // Find trusted Quivellox document by dify_document_id or filename
       const matchedDoc = readyDocs.find(
         (d) => (d.dify_document_id && d.dify_document_id === seg.documentId) || d.original_filename === seg.documentName
       );

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DifyClient } from './dify-client';
 import { DifyRAGProvider } from './dify-rag-provider';
 import { ingestDocument, checkDocumentIngestionStatus, deleteDocumentCascade } from '../ingestion/ingestion-service';
@@ -10,7 +10,7 @@ describe('Dify Architecture Adjustment Integration & Security Tests', () => {
   beforeEach(() => {
     process.env = { ...originalEnv };
     process.env.DIFY_DATASET_API_KEY = 'dataset-secret-token-12345';
-    process.env.DIFY_DEFAULT_DATASET_ID = 'ds-quellivox-primary';
+    process.env.DIFY_DEFAULT_DATASET_ID = 'ds-quivellox-primary';
   });
 
   afterEach(() => {
@@ -39,7 +39,7 @@ describe('Dify Architecture Adjustment Integration & Security Tests', () => {
     } as Response);
 
     try {
-      await client.retrieveSegments('ds-quellivox-primary', 'test');
+      await client.retrieveSegments('ds-quivellox-primary', 'test');
       expect.fail('Should have failed');
     } catch (err: any) {
       expect(err.message).not.toContain('SUPER_SECRET_KEY_NEVER_LEAK');
@@ -176,7 +176,7 @@ describe('Dify Architecture Adjustment Integration & Security Tests', () => {
   });
 
   // 7. Cascading Document Deletion & Reconciliation
-  it('orchestrates cascading deletion across Dify and Quellivox store', async () => {
+  it('orchestrates cascading deletion across Dify and Quivellox store', async () => {
     const store = getStore();
     const docToDelete = {
       id: 'doc-delete-test',

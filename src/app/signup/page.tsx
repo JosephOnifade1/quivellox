@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ export default function SignupPage() {
     try {
       const configError = getSupabaseConfigError();
       if (configError) {
-        console.error('[Quellivox] Auth misconfiguration:', configError);
+        console.error('[Quivellox] Auth misconfiguration:', configError);
         setError('Account creation is temporarily unavailable. Please try again later or contact support.');
         return;
       }

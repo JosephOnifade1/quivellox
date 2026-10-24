@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+﻿import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DifyRAGProvider } from './dify-rag-provider';
 import { DifyClient } from './dify-client';
 
@@ -12,7 +12,7 @@ describe('DifyRAGProvider', () => {
     process.env.DIFY_DEFAULT_DATASET_ID = 'ds-test-default';
   });
 
-  it('correctly maps Dify indexing states to Quellivox DocumentStatus', async () => {
+  it('correctly maps Dify indexing states to Quivellox DocumentStatus', async () => {
     vi.spyOn(mockClient, 'getIndexingStatus').mockResolvedValueOnce({
       id: 'doc-1',
       indexing_status: 'parsing',

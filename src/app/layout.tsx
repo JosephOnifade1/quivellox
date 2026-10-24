@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { DM_Sans, Geist, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 
@@ -30,7 +30,7 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Quellivox — The Evidence Desk",
+  title: "Quivellox — The Evidence Desk",
   description:
     "AI Knowledge Workspace Powered by Retrieval-Augmented Generation. Answers grounded in evidence.",
   icons: {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { validateFile, parseDocument, sanitizeText } from './parser';
 
 describe('Document Parser & File Validator', () => {
@@ -20,7 +20,7 @@ describe('Document Parser & File Validator', () => {
   });
 
   it('parses Markdown document and preserves simulated pages', async () => {
-    const markdown = '# Project Overview\n\nThis is a test markdown document for Quellivox.';
+    const markdown = '# Project Overview\n\nThis is a test markdown document for Quivellox.';
     const buffer = Buffer.from(markdown, 'utf-8');
     const result = await parseDocument(buffer, 'overview.md', 'text/markdown');
 

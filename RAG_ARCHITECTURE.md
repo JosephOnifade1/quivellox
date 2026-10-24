@@ -1,10 +1,10 @@
-# Quellivox — Grounded Retrieval-Augmented Generation (RAG) Architecture
+﻿# Quivellox — Grounded Retrieval-Augmented Generation (RAG) Architecture
 
 ## 1. Overview & Core Philosophy
 
-Quellivox is an evidence-first AI knowledge assistant designed to solve the critical trust deficiency in generative AI: **hallucination, citation drift, and cross-tenant data leakage**.
+Quivellox is an evidence-first AI knowledge assistant designed to solve the critical trust deficiency in generative AI: **hallucination, citation drift, and cross-tenant data leakage**.
 
-Unlike generic chatbot wrappers that stuff arbitrary documents into prompts or rely on unchecked LLM-generated citations, Quellivox treats **evidence as a verified database entity**. Every rendered citation must resolve to a real, authorized, and stored chunk from the user's workspace.
+Unlike generic chatbot wrappers that stuff arbitrary documents into prompts or rely on unchecked LLM-generated citations, Quivellox treats **evidence as a verified database entity**. Every rendered citation must resolve to a real, authorized, and stored chunk from the user's workspace.
 
 ```
                       [ User Upload: PDF / TXT / MD ]
@@ -105,11 +105,11 @@ To eliminate hallucinated citations:
 
 ## 6. Dify-Powered Primary Engine Architecture (Option B)
 
-Quellivox integrates **Dify** as its primary RAG workflow and vector indexing engine via a provider-independent server abstraction (`IRAGProvider`).
+Quivellox integrates **Dify** as its primary RAG workflow and vector indexing engine via a provider-independent server abstraction (`IRAGProvider`).
 
 ```
                     ┌────────────────────────────────────────────────────────┐
-                    │            QUELLIVOX (System of Record)                │
+                    │            QUIVELLOX (System of Record)                │
                     │  • Auth & Session Security (Supabase SSR)              │
                     │  • Workspace Access Control & Tenancy                  │
                     │  • Private File Storage (Supabase Storage)             │
@@ -129,11 +129,11 @@ Quellivox integrates **Dify** as its primary RAG workflow and vector indexing en
 
 ### Core Architecture Principles:
 1. **Zero Client Leakage**: Browser clients never receive Dify dataset IDs or API keys.
-2. **Strict Tenant Isolation**: Each Quellivox Workspace maps 1:1 to an isolated Dify Knowledge Base (`dify_dataset_id`). All retrieval queries strictly scope to the authorized workspace dataset.
+2. **Strict Tenant Isolation**: Each Quivellox Workspace maps 1:1 to an isolated Dify Knowledge Base (`dify_dataset_id`). All retrieval queries strictly scope to the authorized workspace dataset.
 3. **Audited Lifecycle**:
    - `POST /v1/datasets/{id}/document/create-by-file`: Asynchronous upload returning `{ document.id, batch }`.
-   - `GET /v1/datasets/{id}/documents/{batch}/indexing-status`: Status transitions mapped to Quellivox state machine (`queued` → `extracting` → `chunking` → `indexing` → `ready`).
+   - `GET /v1/datasets/{id}/documents/{batch}/indexing-status`: Status transitions mapped to Quivellox state machine (`queued` → `extracting` → `chunking` → `indexing` → `ready`).
    - `POST /v1/datasets/{id}/retrieve`: Workspace-isolated chunk retrieval.
    - `DELETE /v1/datasets/{id}/documents/{doc_id}`: Cascading deletion reconciling Dify index, Supabase Storage, and local database records.
-4. **Citation Grounding**: Dify `retriever_resources` are cross-referenced with Quellivox's trusted document library; foreign or unmapped references are discarded before rendering.
+4. **Citation Grounding**: Dify `retriever_resources` are cross-referenced with Quivellox's trusted document library; foreign or unmapped references are discarded before rendering.
 

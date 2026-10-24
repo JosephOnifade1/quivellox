@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -181,7 +181,7 @@ export default function ActivityAuditPage() {
           description={
             search
               ? `No events match "${search}". Reset your search query to inspect the workspace activity.`
-              : 'Upload a document or submit a research query in Ask Quellivox to generate operational audit entries.'
+              : 'Upload a document or submit a research query in Ask Quivellox to generate operational audit entries.'
           }
           action={
             search ? (

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -84,7 +84,7 @@ export const FirstUseWorkspaceState: React.FC<FirstUseWorkspaceStateProps> = ({
             Workspace Corpus Is Empty
           </h3>
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-            Quellivox strictly grounds every response in your private documents. Upload PDF, Markdown, or text files in your Knowledge Library to begin asking evidence-backed questions.
+            Quivellox strictly grounds every response in your private documents. Upload PDF, Markdown, or text files in your Knowledge Library to begin asking evidence-backed questions.
           </p>
         </div>
         <div className="pt-2">

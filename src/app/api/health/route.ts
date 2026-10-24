@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { getStore } from '@/lib/rag-store';
 import { getRAGProvider } from '@/server/rag/provider-factory';
 
@@ -16,7 +16,7 @@ export async function GET() {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     system: {
-      engine: 'Quellivox Grounded RAG v1.0',
+      engine: 'Quivellox Grounded RAG v1.0',
       activeRAGProvider: provider.name,
       difyConfigured,
       vectorDimensions: 1536,

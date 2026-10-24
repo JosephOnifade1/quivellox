@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -131,7 +131,7 @@ export default function DashboardOverviewPage() {
               size="sm"
               icon={<Sparkles className="w-3.5 h-3.5" />}
             >
-              Ask Quellivox
+              Ask Quivellox
             </Button>
           </Link>
         </div>

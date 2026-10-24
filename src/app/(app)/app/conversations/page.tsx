@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -145,7 +145,7 @@ export default function ConversationsArchivePage() {
           description={
             search
               ? `No archived sessions matched query "${search}". Reset your search to view all sessions.`
-              : 'Pose your first grounded question in Ask Quellivox to generate an interactive research dialogue with verified citations.'
+              : 'Pose your first grounded question in Ask Quivellox to generate an interactive research dialogue with verified citations.'
           }
           action={
             search ? (

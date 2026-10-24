@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Phase 4 Automated Tests
  *
  * Covers:
@@ -111,7 +111,7 @@ describe('Phase 4: Conversations, Activity, Settings, and Workflow Tests', () =>
           {
             chunk_id: 'chk-1',
             document_id: 'doc-1',
-            document_name: 'Quellivox Architecture',
+            document_name: 'Quivellox Architecture',
             quote: 'Retrieval augmented generation grounds answers in evidence.',
             page_number: 2,
             similarity: 0.94,

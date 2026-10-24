@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { Citation } from '@/types';
 
 // Pure logic helpers mirroring the AnswerRenderer and EvidenceInspector logic
@@ -75,7 +75,7 @@ describe('Evidence Desk: Citation & Evidence Inspector Logic', () => {
 
   it('correctly maps inline [1] and [2] citations to verified backend citations', () => {
     const answer =
-      'Quellivox guarantees 99.95% uptime [1] and enforces AES-256 encryption at rest [2].';
+      'Quivellox guarantees 99.95% uptime [1] and enforces AES-256 encryption at rest [2].';
 
     const { matchedCitations, unresolvedIndices } = extractCitationsFromAnswer(
       answer,

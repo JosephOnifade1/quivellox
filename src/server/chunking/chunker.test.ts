@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { chunkText, estimateTokens } from './chunker';
 
 describe('Chunker Engine', () => {
@@ -42,7 +42,7 @@ All data is strictly multi-tenant isolated via Row-Level Security.
   });
 
   it('handles long paragraphs by splitting with overlap', () => {
-    const sentence = 'Quellivox guarantees verifiable evidence for every generated answer. ';
+    const sentence = 'Quivellox guarantees verifiable evidence for every generated answer. ';
     const longText = sentence.repeat(40); // ~2800 chars
     const chunks = chunkText(longText, { targetTokens: 100, overlapTokens: 20 });
 

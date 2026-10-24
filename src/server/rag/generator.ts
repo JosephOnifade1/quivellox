@@ -1,4 +1,4 @@
-import { buildPromptContext } from './context-builder';
+﻿import { buildPromptContext } from './context-builder';
 import { validateCitations } from './citation-validator';
 import { RetrievedPassage } from '../retrieval/retriever';
 import { Citation } from '@/types';
@@ -83,13 +83,13 @@ export async function generateGroundedResponse(
     answer = `Based on the commercial terms, the standard refund window is **14 calendar days** from the date of purchase. [1]\n\nHowever, **digital product licenses, API consumption tiers, and active subscription seats are explicitly excluded** from standard refunds once usage exceeds 50 queries or 10 uploads [2]. For defective digital goods, claims must be submitted to support within **7 days** with evidence.`;
     rawCitations.push({ source_index: 1 }, { source_index: 2 });
   } else if (q.includes('sla') || q.includes('uptime') || q.includes('outage') || q.includes('severity')) {
-    answer = `Under the Enterprise Service Level Agreement, Quellivox guarantees a monthly availability uptime of at least **99.95%** [1].\n\nIncident response SLAs are strictly bounded by severity:\n- **Priority 1 (Critical / Full Outage)**: Initial response within **15 minutes** [2].\n- **Priority 2 (Major Impairment)**: Initial response within **1 hour**.\n- **Priority 3 (Minor)**: Initial response within **4 business hours**.\n\nBreaches trigger automated invoice credits ranging between **10% and 50%** [3].`;
+    answer = `Under the Enterprise Service Level Agreement, Quivellox guarantees a monthly availability uptime of at least **99.95%** [1].\n\nIncident response SLAs are strictly bounded by severity:\n- **Priority 1 (Critical / Full Outage)**: Initial response within **15 minutes** [2].\n- **Priority 2 (Major Impairment)**: Initial response within **1 hour**.\n- **Priority 3 (Minor)**: Initial response within **4 business hours**.\n\nBreaches trigger automated invoice credits ranging between **10% and 50%** [3].`;
     rawCitations.push({ source_index: 1 }, { source_index: 2 }, { source_index: 3 });
   } else if (q.includes('chunk') || q.includes('retriev') || q.includes('hybrid') || q.includes('vector') || q.includes('architecture')) {
-    answer = `The Quellivox system architecture employs recursive character splitting with a target window of **512 tokens and 64-token overlap**, preserving syntactic boundaries across Markdown headers and paragraphs [1].\n\nRetrieval executes through a **hybrid dual-channel search**: dense vector search (pgvector with HNSW cosine indexing) combined with sparse BM25 keyword matching via PostgreSQL full-text search [2].`;
+    answer = `The Quivellox system architecture employs recursive character splitting with a target window of **512 tokens and 64-token overlap**, preserving syntactic boundaries across Markdown headers and paragraphs [1].\n\nRetrieval executes through a **hybrid dual-channel search**: dense vector search (pgvector with HNSW cosine indexing) combined with sparse BM25 keyword matching via PostgreSQL full-text search [2].`;
     rawCitations.push({ source_index: 1 }, { source_index: 2 });
   } else if (q.includes('security') || q.includes('encrypt') || q.includes('soc') || q.includes('training')) {
-    answer = `All customer data at rest is encrypted using **FIPS 140-2 validated AES-256**, and all network traffic in transit is secured with **TLS 1.3 with forward secrecy** [1].\n\nFurthermore, Quellivox strictly enforces a **Zero Training Policy**: customer-uploaded documents, vector embeddings, and chat queries are never used to train or fine-tune foundation models [2].`;
+    answer = `All customer data at rest is encrypted using **FIPS 140-2 validated AES-256**, and all network traffic in transit is secured with **TLS 1.3 with forward secrecy** [1].\n\nFurthermore, Quivellox strictly enforces a **Zero Training Policy**: customer-uploaded documents, vector embeddings, and chat queries are never used to train or fine-tune foundation models [2].`;
     rawCitations.push({ source_index: 1 }, { source_index: 2 });
   } else {
     // Dynamic synthesis based on top matching passage

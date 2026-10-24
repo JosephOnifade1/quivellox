@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -29,14 +29,14 @@ export const Logo: React.FC<LogoProps> = ({
     return (
       <div className={`inline-flex items-center select-none ${className}`}>
         <img
-          src="/quellivox-wordmark-light-cropped.png"
-          alt="Quellivox"
+          src="/quivellox-wordmark-light-cropped.png"
+          alt="Quivellox"
           style={{ height: px }}
           className="w-auto object-contain dark:hidden"
         />
         <img
-          src="/quellivox-wordmark-dark-cropped.png"
-          alt="Quellivox"
+          src="/quivellox-wordmark-dark-cropped.png"
+          alt="Quivellox"
           style={{ height: px }}
           className="w-auto object-contain hidden dark:block"
         />
@@ -48,8 +48,8 @@ export const Logo: React.FC<LogoProps> = ({
     <div className={`inline-flex items-center gap-3 select-none ${className}`}>
       {/* Exact Generated Aperture Mark Image */}
       <img
-        src="/quellivox-logo-mark-cropped.png"
-        alt="Quellivox Logo"
+        src="/quivellox-logo-mark-cropped.png"
+        alt="Quivellox Logo"
         width={px}
         height={px}
         style={{ width: px, height: px }}
@@ -61,7 +61,7 @@ export const Logo: React.FC<LogoProps> = ({
           <span
             className={`font-heading font-bold tracking-tight text-[var(--text-primary)] transition-colors ${fontStyle.title}`}
           >
-            Quellivox
+            Quivellox
           </span>
           {subtitle && (
             <span

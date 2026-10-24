@@ -10,7 +10,9 @@ export async function GET(req: NextRequest) {
   const { ctx, errorResponse: ctxError } = await requireAuthContext(user.id);
   if (ctxError) return ctxError;
 
-  const supabase = (await createServerSupabaseClient()) || createAdminClient();
+  const admin = createAdminClient();
+  const supabase = await createServerSupabaseClient();
+  const clientToUse = admin || supabase;
 
   let profileData: {
     display_name?: string;
@@ -20,9 +22,9 @@ export async function GET(req: NextRequest) {
 
   let workspaceName = 'Personal Knowledge';
 
-  if (supabase) {
+  if (clientToUse) {
     // 1. Fetch profile
-    const { data: profile } = await supabase
+    const { data: profile } = await clientToUse
       .from('profiles')
       .select('display_name, avatar_url, theme_preference')
       .eq('id', user.id)
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 2. Fetch workspace name
-    const { data: ws } = await supabase
+    const { data: ws } = await clientToUse
       .from('workspaces')
       .select('name')
       .eq('id', ctx.workspaceId)
@@ -75,43 +77,96 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { displayName, password, themePreference } = body;
 
-    const supabase = await createServerSupabaseClient();
     const admin = createAdminClient();
-    const clientToUse = supabase || admin;
+    const supabase = await createServerSupabaseClient();
+    const clientToUse = admin || supabase;
+
+    const trimmedName = typeof displayName === 'string' ? displayName.trim() : undefined;
 
     // 1. Update display name & metadata in Supabase Auth if provided
-    if (displayName && supabase) {
-      await supabase.auth.updateUser({
-        data: {
-          full_name: displayName.trim(),
-          display_name: displayName.trim(),
-        },
-      });
-    }
+    if (trimmedName) {
+      if (admin) {
+        await admin.auth.admin.updateUserById(user.id, {
+          user_metadata: {
+            ...((user as any).user_metadata || {}),
+            full_name: trimmedName,
+            display_name: trimmedName,
+          },
+        });
+      }
 
-    // 2. Update password if requested
-    if (password && password.trim().length >= 8 && supabase) {
-      const { error: pwError } = await supabase.auth.updateUser({
-        password: password.trim(),
-      });
-      if (pwError) {
-        return NextResponse.json({ error: pwError.message }, { status: 400 });
+      if (supabase) {
+        await supabase.auth.updateUser({
+          data: {
+            full_name: trimmedName,
+            display_name: trimmedName,
+          },
+        });
       }
     }
 
-    // 3. Upsert into public.profiles
-    if (clientToUse && displayName) {
-      await clientToUse.from('profiles').upsert({
+    // 2. Update password if requested
+    if (password && typeof password === 'string' && password.trim().length >= 8) {
+      const trimmedPassword = password.trim();
+      let passwordError: string | null = null;
+
+      if (admin) {
+        const { error: adminPwError } = await admin.auth.admin.updateUserById(user.id, {
+          password: trimmedPassword,
+        });
+        if (adminPwError) {
+          passwordError = adminPwError.message;
+        }
+      } else if (supabase) {
+        const { error: pwError } = await supabase.auth.updateUser({
+          password: trimmedPassword,
+        });
+        if (pwError) {
+          passwordError = pwError.message;
+        }
+      }
+
+      if (passwordError) {
+        return NextResponse.json({ error: passwordError }, { status: 400 });
+      }
+    }
+
+    // 3. Upsert / update public.profiles
+    if (clientToUse && trimmedName) {
+      const profilePayload = {
         id: user.id,
-        display_name: displayName.trim(),
+        display_name: trimmedName,
         theme_preference: themePreference || 'dark',
         updated_at: new Date().toISOString(),
-      });
+      };
+
+      // Try upsert first (works with admin client or with INSERT policy)
+      const { error: upsertError } = await clientToUse.from('profiles').upsert(profilePayload);
+
+      if (upsertError) {
+        console.warn('[Profile API] Upsert notice, applying direct update fallback:', upsertError.message);
+        // Fall back to direct update (which is permitted by UPDATE policy on profiles)
+        const { error: updateError } = await clientToUse
+          .from('profiles')
+          .update({
+            display_name: trimmedName,
+            theme_preference: themePreference || 'dark',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', user.id);
+
+        if (updateError) {
+          console.error('[Profile API] Update fallback error:', updateError.message);
+          if (admin && clientToUse !== admin) {
+            await admin.from('profiles').upsert(profilePayload);
+          }
+        }
+      }
     }
 
     return NextResponse.json({
       success: true,
-      displayName: displayName?.trim(),
+      displayName: trimmedName,
       themePreference: themePreference || 'dark',
     });
   } catch (err: unknown) {

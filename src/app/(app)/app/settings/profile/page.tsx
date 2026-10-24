@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -112,8 +112,16 @@ export default function ProfileSettingsPage() {
       setSavedSuccess(true);
       setNewPassword('');
       setConfirmPassword('');
+      if (data.displayName) {
+        setDisplayName(data.displayName);
+        setProfile((prev) => (prev ? { ...prev, displayName: data.displayName } : null));
+        window.dispatchEvent(
+          new CustomEvent('profile-updated', { detail: { displayName: data.displayName } })
+        );
+      }
       setTimeout(() => setSavedSuccess(false), 3000);
-      fetchProfile();
+      router.refresh();
+      await fetchProfile();
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Error updating profile');
     } finally {

@@ -41,8 +41,24 @@ export const UserNavMenu: React.FC<{ className?: string }> = ({ className = '' }
       }
     }
     loadProfile();
+
+    const handleProfileUpdated = (e: Event) => {
+      const customEvent = e as CustomEvent<{ displayName?: string }>;
+      if (customEvent.detail?.displayName) {
+        setProfile((prev) => ({
+          ...prev,
+          displayName: customEvent.detail.displayName!,
+        }));
+      } else {
+        loadProfile();
+      }
+    };
+
+    window.addEventListener('profile-updated', handleProfileUpdated);
+
     return () => {
       mounted = false;
+      window.removeEventListener('profile-updated', handleProfileUpdated);
     };
   }, []);
 

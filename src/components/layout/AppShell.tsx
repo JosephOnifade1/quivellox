@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 import { CommandMenu } from './CommandMenu';
-import { X } from 'lucide-react';
+import { X, ArrowRight } from 'lucide-react';
 import { DocumentUploadModal } from '@/components/rag/DocumentUploadModal';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -25,8 +27,17 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [isGuest, setIsGuest] = useState<boolean | null>(null); // null = checking
 
-  // Global keyboard shortcut for ⌘K / Ctrl+K
+  // Check once on mount whether the visitor has an active session
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) { setIsGuest(false); return; }
+    supabase.auth.getUser().then(({ data }) => {
+      setIsGuest(!data.user);
+    });
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -94,6 +105,31 @@ export const AppShell: React.FC<AppShellProps> = ({
           breadcrumbs={breadcrumbs}
           action={action}
         />
+
+        {/* Guest Demo Banner — only shown to unauthenticated visitors */}
+        {isGuest === true && (
+          <div className="shrink-0 flex items-center justify-between gap-4 px-4 py-2 bg-[#D8F36A] text-[#151713] text-xs font-medium">
+            <span>
+              <span className="font-bold">Browsing as guest.</span>
+              {' '}You can explore the interface — sign in to run queries and upload documents.
+            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-1 h-6 px-2.5 rounded-[4px] bg-[#151713] text-[#F5F4EE] text-[11px] font-bold hover:bg-[#20231E] transition-colors"
+              >
+                Create workspace
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center h-6 px-2.5 rounded-[4px] border border-[#151713]/30 text-[11px] font-semibold hover:bg-[#cbe65e] transition-colors"
+              >
+                Sign in
+              </Link>
+            </div>
+          </div>
+        )}
 
         <main className="flex-1 overflow-y-auto min-h-0 bg-[var(--bg-main)]">
           {children}
